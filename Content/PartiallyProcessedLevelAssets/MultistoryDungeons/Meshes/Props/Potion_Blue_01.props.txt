@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'/Engine/EngineMaterials/WorldGridMaterial.WorldGridMaterial'
+        MaterialSlotName = Props_01_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 341.357, 43.7255, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=4.86374e-05, Z=11.135 }
+    BoxExtent = { X=9.11613, Y=9.11609, Z=11.428 }
+    SphereRadius = 13.8863
+}

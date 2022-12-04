@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Base_01_Inst.Base_01_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Base_01_Inst.Base_01_Inst'
+        MaterialSlotName = Base_01_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 1434.72, 1230.46, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=5.20154, Y=0.376701, Z=299.269 }
+    BoxExtent = { X=305.202, Y=56.8178, Z=299.269 }
+    SphereRadius = 430.404
+}

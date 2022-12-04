@@ -1,0 +1,50 @@
+Materials[3] =
+{
+    Materials[0] = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_02_Inst.Props_02_Inst'
+    Materials[1] = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_Glass_Inst_01.Props_Glass_Inst_01'
+    Materials[2] = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_Glass_Doublesided_Inst.Props_Glass_Doublesided_Inst'
+}
+SourceModels[0] = {}
+StaticMaterials[3] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_02_Inst.Props_02_Inst'
+        MaterialSlotName = Props_02_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 225.453, 387.354, 0, 0 }
+        }
+    }
+    StaticMaterials[1] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_Glass_Inst_01.Props_Glass_Inst_01'
+        MaterialSlotName = Props_Glass_Inst_01
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 228.868, 406.876, 0, 0 }
+        }
+    }
+    StaticMaterials[2] =
+    {
+        MaterialInterface = MaterialInstanceConstant'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Materials/Props_Glass_Doublesided_Inst.Props_Glass_Doublesided_Inst'
+        MaterialSlotName = Props_Glass_Doublesided_Inst
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 219.067, 393.607, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=1.55109, Y=10.1428, Z=226.627 }
+    BoxExtent = { X=51.8406, Y=43.1646, Z=83.7626 }
+    SphereRadius = 104.417
+}

@@ -1,0 +1,6 @@
+Diffuse=Railgun_BaseColor
+Normal=Railgun_Normal
+Emissive=Railgun_Emissive
+Other[0]=Railgun_Metallic
+Other[1]=Railgun_Occlusion
+Other[2]=Railgun_Roughness

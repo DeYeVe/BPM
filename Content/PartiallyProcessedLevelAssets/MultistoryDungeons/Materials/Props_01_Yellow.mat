@@ -1,0 +1,5 @@
+Diffuse=T_gradient_healed
+Normal=Atlas_Props_01_Normal
+Other[0]=Atlas_Props_01
+Other[1]=Atlas_Props_01_Metallic
+Other[2]=Atlas_Props_01_Roughness

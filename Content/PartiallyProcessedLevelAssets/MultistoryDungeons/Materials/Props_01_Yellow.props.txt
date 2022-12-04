@@ -1,0 +1,134 @@
+TwoSided = false
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[5] =
+{
+    ReferencedTextures[0] = Texture2D'/BPM/Content/ParagonGlobal/FX/Textures/Gradients/Masks/T_gradient_healed.T_gradient_healed'
+    ReferencedTextures[1] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01.Atlas_Props_01'
+    ReferencedTextures[2] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Metallic.Atlas_Props_01_Metallic'
+    ReferencedTextures[3] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Normal.Atlas_Props_01_Normal'
+    ReferencedTextures[4] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Roughness.Atlas_Props_01_Roughness'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[9] =
+                {
+                    ParameterInfos[0] = { Name=FlashWhite }
+                    ParameterInfos[1] = { Name=WorldScale }
+                    ParameterInfos[2] = { Name=TimeSpeed }
+                    ParameterInfos[3] = { Name=OutputHigh }
+                    ParameterInfos[4] = { Name=scal }
+                    ParameterInfos[5] = { Name=InputHigh }
+                    ParameterInfos[6] = { Name=InputLow }
+                    ParameterInfos[7] = { Name=GlintEnabled }
+                    ParameterInfos[8] = { Name=OutputLow }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[3] =
+                {
+                    ParameterInfos[0] = { Name=OutColor }
+                    ParameterInfos[1] = { Name=TotalFlashColor }
+                    ParameterInfos[2] = { Name=WorldPickupColor }
+                }
+            }
+            Entries[2] = { ParameterInfos[0]={} }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[9] = { 0, 0.04, 400, 1, 0.01, 1, 0.98, 1, 0 }
+        VectorValues[3] =
+        {
+            VectorValues[0] = { R=0, G=0, B=0, A=0 }
+            VectorValues[1] = { R=0, G=1, B=0, A=0 }
+            VectorValues[2] = { R=0.2, G=0.05, B=0.05, A=0 }
+        }
+        TextureValues[0] = {}
+    }
+    ReferencedTextures[5] =
+    {
+        ReferencedTextures[0] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Metallic.Atlas_Props_01_Metallic'
+        ReferencedTextures[1] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Roughness.Atlas_Props_01_Roughness'
+        ReferencedTextures[2] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01_Normal.Atlas_Props_01_Normal'
+        ReferencedTextures[3] = Texture2D'/BPM/Content/PartiallyProcessedLevelAssets/MultistoryDungeons/Textures/Atlas_Props_01.Atlas_Props_01'
+        ReferencedTextures[4] = Texture2D'/BPM/Content/ParagonGlobal/FX/Textures/Gradients/Masks/T_gradient_healed.T_gradient_healed'
+    }
+}
+BlendMode = BLEND_Opaque (0)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[0] = {}
+CollectedScalarParameters[9] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=FlashWhite, Group=None }
+    CollectedScalarParameters[1] = { Value=0.04, Name=WorldScale, Group=None }
+    CollectedScalarParameters[2] = { Value=400, Name=TimeSpeed, Group=None }
+    CollectedScalarParameters[3] = { Value=1, Name=OutputHigh, Group=None }
+    CollectedScalarParameters[4] = { Value=0.01, Name=scal, Group=None }
+    CollectedScalarParameters[5] = { Value=1, Name=InputHigh, Group=None }
+    CollectedScalarParameters[6] = { Value=0.98, Name=InputLow, Group=None }
+    CollectedScalarParameters[7] = { Value=1, Name=GlintEnabled, Group=None }
+    CollectedScalarParameters[8] = { Value=0, Name=OutputLow, Group=None }
+}
+CollectedVectorParameters[3] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = OutColor
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = TotalFlashColor
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=0.2, G=0.05, B=0.05, A=0 }
+        Name = WorldPickupColor
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = Atlas_Props_01
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = Atlas_Props_01_Metallic
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = Atlas_Props_01_Normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = Atlas_Props_01_Roughness
+    }
+}

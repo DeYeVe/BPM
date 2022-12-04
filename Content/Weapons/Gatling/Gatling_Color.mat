@@ -1,0 +1,6 @@
+Diffuse=Gatling_BaseColor
+Normal=Gatling_Normal
+Emissive=Gatling_Emissive
+Other[0]=Gatling_MetallicRoughnessOcclusion
+Other[1]=Gatling_Occlusion
+Other[2]=Gatling_Roughness

@@ -1,0 +1,4 @@
+Normal=bake_normal_ao
+Other[0]=main_all_low_Material_001_BaseColor
+Other[1]=main_all_low_Material_001_Normal
+Other[2]=main_all_low_Material_001_OcclusionRoughnessMetallic
