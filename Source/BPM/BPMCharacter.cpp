@@ -2,7 +2,7 @@
 
 #include "BPMCharacter.h"
 #include "BPMProjectile.h"
-#include "Animation/AnimInstance.h"
+#include "BPMAnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -32,8 +32,34 @@ ABPMCharacter::ABPMCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+	Mesh1P->SetRelativeRotation(FRotator(0.f, -90.f, 90.f));
+	Mesh1P->SetRelativeLocation(FVector(-15.0f, -0.0f, -140.f));
+ 
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM(TEXT("SkeletalMesh'/Game/Player/FP_player/Player.Player_FP_player_mo'"));
+
+	if (SM.Succeeded())
+	{
+		GetMesh1P()->SetSkeletalMesh(SM.Object);
+	}
+	
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SW(TEXT("SkeletalMesh'/Game/Weapons/Pistol/BA_pistol.BA_pistol_BA_pistol_mo'"));
+	if(SW.Succeeded())
+	{
+		WeaponMesh->SetSkeletalMesh(SW.Object);
+	}
+	
+	FName WeaponSocket(TEXT("weapon_R292_socket"));
+	
+	if(GetMesh1P()->DoesSocketExist(WeaponSocket))
+	{
+		UE_LOG(LogTemp, Log, TEXT("weapon socket"));
+		WeaponMesh->SetupAttachment(GetMesh1P(), WeaponSocket);
+	}
+	
+	WeaponComponent = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("WeaponComp"));
+	WeaponComponent->AttachWeapon(this);
 
 }
 
@@ -41,7 +67,18 @@ void ABPMCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+	
+	AnimInstance = Cast<UBPMAnimInstance>(GetMesh1P()->GetAnimInstance());
+}
 
+void ABPMCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+}
+
+void ABPMCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -56,15 +93,19 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ABPMCharacter::OnPrimaryAction);
-
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABPMCharacter::Fire);
+	
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABPMCharacter::Reload);
+	
+	// // Enable touchscreen input
+	// EnableTouchscreenMovement(PlayerInputComponent);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &ABPMCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &ABPMCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABPMCharacter::Dash);
+	
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "Mouse" versions handle devices that provide an absolute delta, such as a mouse.
 	// "Gamepad" versions are for devices that we choose to treat as a rate of change, such as an analog joystick
@@ -73,37 +114,37 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &ABPMCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &ABPMCharacter::LookUpAtRate);
 }
-
-void ABPMCharacter::OnPrimaryAction()
-{
-	// Trigger the OnItemUsed Event
-	OnUseItem.Broadcast();
-}
-
-void ABPMCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == true)
-	{
-		return;
-	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnPrimaryAction();
-	}
-	TouchItem.bIsPressed = true;
-	TouchItem.FingerIndex = FingerIndex;
-	TouchItem.Location = Location;
-	TouchItem.bMoved = false;
-}
-
-void ABPMCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == false)
-	{
-		return;
-	}
-	TouchItem.bIsPressed = false;
-}
+//
+// void ABPMCharacter::OnPrimaryAction()
+// {
+// 	// Trigger the OnItemUsed Event
+// 	OnUseItem.Broadcast();
+// }
+//
+// void ABPMCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+// {
+// 	if (TouchItem.bIsPressed == true)
+// 	{
+// 		return;
+// 	}
+// 	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
+// 	{
+// 		OnPrimaryAction();
+// 	}
+// 	TouchItem.bIsPressed = true;
+// 	TouchItem.FingerIndex = FingerIndex;
+// 	TouchItem.Location = Location;
+// 	TouchItem.bMoved = false;
+// }
+//
+// void ABPMCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+// {
+// 	if (TouchItem.bIsPressed == false)
+// 	{
+// 		return;
+// 	}
+// 	TouchItem.bIsPressed = false;
+// }
 
 void ABPMCharacter::MoveForward(float Value)
 {
@@ -134,16 +175,38 @@ void ABPMCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
+//
+// bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
+// {
+// 	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
+// 	{
+// 		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ABPMCharacter::BeginTouch);
+// 		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &ABPMCharacter::EndTouch);
+//
+// 		return true;
+// 	}
+// 	
+// 	return false;
+// }
 
-bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
-{
-	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
-	{
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ABPMCharacter::BeginTouch);
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &ABPMCharacter::EndTouch);
-
-		return true;
-	}
+void ABPMCharacter::Fire()
+{	
+	UE_LOG(LogTemp, Log, TEXT("Fire"));
 	
-	return false;
+	if(AnimInstance)
+	{
+		AnimInstance->PlayPlayerFireMontage();
+		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
+	}
+	OnUseItem.Broadcast();
+	WeaponComponent->Fire();
+	
+}
+
+void ABPMCharacter::Reload()
+{
+}
+
+void ABPMCharacter::Dash()
+{
 }

@@ -30,6 +30,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector MuzzleOffset;
 
+	UPROPERTY()
+	class UGameplayStatics* GameStatic;
+	
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystem* MuzzleEffect;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category=Mesh)
+	USkeletalMeshComponent* WeaponMesh;
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -40,6 +49,9 @@ public:
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
+	
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Reload();
 
 protected:
 	/** Ends gameplay for this component. */
@@ -49,5 +61,7 @@ protected:
 
 private:
 	/** The Character holding this weapon*/
+	UPROPERTY(VisibleAnywhere)
 	ABPMCharacter* Character;
+	
 };
