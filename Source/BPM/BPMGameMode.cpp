@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "BPMGameMode.h"
-#include "BPMCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 ABPMGameMode::ABPMGameMode()

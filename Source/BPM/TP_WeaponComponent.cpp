@@ -4,6 +4,7 @@
 #include "TP_WeaponComponent.h"
 #include "BPMCharacter.h"
 #include "BPMProjectile.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,10 +16,9 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireSoundBase(TEXT("SoundWave'/Game/FPWeapon/Audio/FirstPersonTemplateWeaponFire02.FirstPersonTemplateWeaponFire02'"));
+	static ConstructorHelpers::FObjectFinder<USoundBase> FireSoundBase(TEXT("SoundWave'/Game/Sounds/SE/PistolFire.PistolFire'"));
 	if (FireSoundBase.Succeeded())
 	{
-		UE_LOG(LogTemp, Log, TEXT("SoundLoaded"));
 		FireSound = FireSoundBase.Object;
 	}
 
@@ -38,6 +38,50 @@ void UTP_WeaponComponent::Fire()
 		return;
 	}
 
+	// scan hit using trace
+	{
+		FHitResult HitResult;
+		FCollisionQueryParams Params(NAME_None, false, Character);
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes; // 히트 가능한 오브젝트 유형들.
+		TEnumAsByte<EObjectTypeQuery> WorldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
+		TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
+		FVector StartLocation = Character->GetFirstPersonCameraComponent()->GetComponentLocation();
+		FVector EndLocation = Character->GetFirstPersonCameraComponent()->GetComponentLocation()
+			+ Character->GetFirstPersonCameraComponent()->GetForwardVector() * 1200;
+
+		bool IsHitResult = GetWorld()->LineTraceSingleByObjectType(
+			HitResult,
+			StartLocation,
+			EndLocation,
+			ObjectTypes,
+			Params);
+
+		//debugline
+		if (true)
+		{
+			FColor DrawColor = IsHitResult ? FColor::Green : FColor::Red;
+			const float DebugLifeTime = 5.0f;
+			DrawDebugLine(GetWorld(), StartLocation, EndLocation, DrawColor, false, DebugLifeTime);
+		}
+
+		if (IsHitResult)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Hit"));
+		}
+		else
+		{
+			
+		}
+	}
+	
+	if (MuzzleEffect != nullptr)
+	{
+		//UE_LOG(LogTemp, Log, TEXT("has muzzlefx"));
+		GameStatic->SpawnEmitterAttached(MuzzleEffect, Character->GetWeaponMesh(), FName("Muzzle"),
+			FVector(ForceInit), FRotator::ZeroRotator, FVector(0.005));
+	}
+	
+	/*
 	// Try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{
@@ -68,7 +112,7 @@ void UTP_WeaponComponent::Fire()
 					FVector(ForceInit), FRotator::ZeroRotator, FVector(0.005));
 			}
 		}
-	}
+	}*/
 	
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
@@ -113,8 +157,6 @@ void UTP_WeaponComponent::AttachWeapon(ABPMCharacter* TargetCharacter)
 
 		// Register so that Fire is called every time the character tries to use the item being held
 		Character->OnUseItem.AddDynamic(this, &UTP_WeaponComponent::Fire);
-
-		WeaponMesh = Character->GetWeaponMesh();
 	}
 }
 

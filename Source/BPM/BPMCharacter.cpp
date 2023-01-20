@@ -7,6 +7,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
+#include "BPMTimerActor.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +61,12 @@ ABPMCharacter::ABPMCharacter()
 	}
 	
 	WeaponComponent = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("WeaponComp"));
-	WeaponComponent->AttachWeapon(this);
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> FireSoundBase(TEXT("SoundWave'/Game/Sounds/SE/OffBeat.OffBeat'"));
+	if (FireSoundBase.Succeeded())
+	{
+		OffBeatSound = FireSoundBase.Object;
+	}
 
 }
 
@@ -69,6 +76,9 @@ void ABPMCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	AnimInstance = Cast<UBPMAnimInstance>(GetMesh1P()->GetAnimInstance());
+	WeaponComponent->AttachWeapon(this);
+
+	TimerActor = Cast<ABPMTimerActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ABPMTimerActor::StaticClass()));
 }
 
 void ABPMCharacter::PostInitializeComponents()
@@ -79,6 +89,20 @@ void ABPMCharacter::PostInitializeComponents()
 void ABPMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (TimerActor->IsInCrotchet() && !IsInCrotchet)
+	{
+		IsInCrotchet = true;
+		CanAct = true;
+		UE_LOG(LogTemp, Log, TEXT("Change to c"));
+	}
+	
+	if (TimerActor->IsInQuaver() && IsInCrotchet)
+	{
+		IsInCrotchet = false;
+		CanAct = true;
+		UE_LOG(LogTemp, Log, TEXT("Change to q"));
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -114,37 +138,38 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &ABPMCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &ABPMCharacter::LookUpAtRate);
 }
-//
-// void ABPMCharacter::OnPrimaryAction()
-// {
-// 	// Trigger the OnItemUsed Event
-// 	OnUseItem.Broadcast();
-// }
-//
-// void ABPMCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-// {
-// 	if (TouchItem.bIsPressed == true)
-// 	{
-// 		return;
-// 	}
-// 	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-// 	{
-// 		OnPrimaryAction();
-// 	}
-// 	TouchItem.bIsPressed = true;
-// 	TouchItem.FingerIndex = FingerIndex;
-// 	TouchItem.Location = Location;
-// 	TouchItem.bMoved = false;
-// }
-//
-// void ABPMCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-// {
-// 	if (TouchItem.bIsPressed == false)
-// 	{
-// 		return;
-// 	}
-// 	TouchItem.bIsPressed = false;
-// }
+
+/*
+void ABPMCharacter::OnPrimaryAction()
+{
+	// Trigger the OnItemUsed Event
+	OnUseItem.Broadcast();
+}
+
+void ABPMCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+{
+	if (TouchItem.bIsPressed == true)
+	{
+		return;
+	}
+	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
+	{
+		OnPrimaryAction();
+	}
+	TouchItem.bIsPressed = true;
+	TouchItem.FingerIndex = FingerIndex;
+	TouchItem.Location = Location;
+	TouchItem.bMoved = false;
+}
+
+void ABPMCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+{
+	if (TouchItem.bIsPressed == false)
+	{
+		return;
+	}
+	TouchItem.bIsPressed = false;
+}*/
 
 void ABPMCharacter::MoveForward(float Value)
 {
@@ -175,32 +200,51 @@ void ABPMCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
-//
-// bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
-// {
-// 	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
-// 	{
-// 		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ABPMCharacter::BeginTouch);
-// 		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &ABPMCharacter::EndTouch);
-//
-// 		return true;
-// 	}
-// 	
-// 	return false;
-// }
+
+/*
+bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
+{
+	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
+	{
+		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ABPMCharacter::BeginTouch);
+		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &ABPMCharacter::EndTouch);
+
+		return true;
+	}
+	
+	return false;
+}*/
 
 void ABPMCharacter::Fire()
-{	
-	UE_LOG(LogTemp, Log, TEXT("Fire"));
-	
-	if(AnimInstance)
+{
+	if(!CanAct)
 	{
-		AnimInstance->PlayPlayerFireMontage();
-		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
+		return;
 	}
-	OnUseItem.Broadcast();
-	WeaponComponent->Fire();
 	
+	if(TimerActor->IsInCrotchet() || TimerActor->IsInQuaver())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Fire"));
+
+		if(AnimInstance)
+		{
+			AnimInstance->PlayPlayerFireMontage();
+			Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
+		}
+		OnUseItem.Broadcast();
+		WeaponComponent->Fire();
+		
+		CanAct = false;
+	}
+	else
+	{		
+		if (OffBeatSound != nullptr)
+		{
+			UE_LOG(LogTemp, Log, TEXT("PlayFireSound"));
+			UGameplayStatics::PlaySoundAtLocation(this, OffBeatSound, GetActorLocation());
+		}		
+	}
+
 }
 
 void ABPMCharacter::Reload()

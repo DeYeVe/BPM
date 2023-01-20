@@ -76,18 +76,19 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	// struct TouchData
-	// {
-	// 	TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}
-	// 	bool bIsPressed;
-	// 	ETouchIndex::Type FingerIndex;
-	// 	FVector Location;
-	// 	bool bMoved;
-	// };
-	// void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	// void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	// void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	// TouchData	TouchItem;
+	/*struct TouchData
+	{
+		TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}
+		bool bIsPressed;
+		ETouchIndex::Type FingerIndex;
+		FVector Location;
+		bool bMoved;
+	};
+	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
+	TouchData	TouchItem;
+	*/
 	
 protected:
 	// APawn interface
@@ -116,7 +117,20 @@ public:
 	USkeletalMeshComponent* WeaponMesh;
 
 	UPROPERTY()
-	class UBPMAnimInstance* AnimInstance;
+	UBPMAnimInstance* AnimInstance;
+
+	UPROPERTY()
+	class ABPMTimerActor* TimerActor;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	USoundBase* OffBeatSound;
+
+	UPROPERTY()
+	bool CanAct = true;
+
+	UPROPERTY()
+	bool IsInCrotchet = false;
+	
 
 public:
 	void Fire();

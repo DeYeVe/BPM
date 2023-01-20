@@ -36,9 +36,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystem* MuzzleEffect;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category=Mesh)
-	USkeletalMeshComponent* WeaponMesh;
-
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
