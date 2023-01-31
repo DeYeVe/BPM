@@ -33,10 +33,19 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float FCrotchet = 60.f / 88.f; // 60 / BPM	
 
-	public:
+public:
 	UFUNCTION()
 	bool IsInCrotchet();
 	
 	UFUNCTION()
 	bool IsInQuaver();
+
+	UFUNCTION()
+	float GetBeatOffset() const { return FTotalTime - FLastBeat; };
+	
+	UFUNCTION()
+	float GetCrotchet() const { return FCrotchet; };
+	
+	UFUNCTION()
+	float GetQuaver() const { return FCrotchet / 2.f; };
 };
