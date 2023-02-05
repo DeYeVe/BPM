@@ -21,12 +21,27 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	{
 		FireSound = FireSoundBase.Object;
 	}
-
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> ReloadStartSoundBase(TEXT("SoundWave'/Game/Sounds/SE/PistolReloadStart.PistolReloadStart'"));
+	if (ReloadStartSoundBase.Succeeded())
+	{
+		ReloadStartSound = ReloadStartSoundBase.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> ReloadEndSoundBase(TEXT("SoundWave'/Game/Sounds/SE/PistolReloadEnd.PistolReloadEnd'"));
+	if (ReloadEndSoundBase.Succeeded())
+	{
+		ReloadEndSound = ReloadEndSoundBase.Object;
+	}
+	
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> MuzzleObj (TEXT("ParticleSystem'/Game/ParagonDrongo/FX/Particles/Abilities/Primary/FX/P_Drongo_Primary_MuzzleFlash.P_Drongo_Primary_MuzzleFlash'"));
 	if (MuzzleObj.Succeeded())
 	{
 		MuzzleEffect = MuzzleObj.Object;
 	}
+
+	MaxAmmo = 8;
+	CurrentAmmo = MaxAmmo;
 }
 
 
@@ -38,6 +53,9 @@ void UTP_WeaponComponent::Fire()
 		return;
 	}
 
+	CurrentAmmo--;
+	UE_LOG(LogTemp, Log, TEXT("%d"), CurrentAmmo);
+	
 	// scan hit using trace
 	{
 		FHitResult HitResult;
@@ -117,7 +135,6 @@ void UTP_WeaponComponent::Fire()
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
-		UE_LOG(LogTemp, Log, TEXT("PlayFireSound"));
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
 	
@@ -133,9 +150,44 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-void UTP_WeaponComponent::Reload()
+void UTP_WeaponComponent::ReloadStart()
 {
+	if (ReloadStartSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadStartSound, Character->GetActorLocation());
+	}
+
+	if (ReloadStartAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* PlayerAnimInstance = Character->GetMesh1P()->GetAnimInstance();
+		if (PlayerAnimInstance != nullptr)
+		{
+			PlayerAnimInstance->Montage_Play(ReloadStartAnimation, 1.f);
+		}
+	}
 }
+
+void UTP_WeaponComponent::ReloadEnd()
+{
+	if (ReloadEndSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ReloadEndSound, Character->GetActorLocation());
+	}
+
+	if (ReloadEndAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* PlayerAnimInstance = Character->GetMesh1P()->GetAnimInstance();
+		if (PlayerAnimInstance != nullptr)
+		{
+			PlayerAnimInstance->Montage_Play(ReloadEndAnimation, 1.f);
+		}
+	}
+
+	CurrentAmmo = MaxAmmo;
+}
+
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {

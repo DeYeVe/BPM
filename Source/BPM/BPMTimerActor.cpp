@@ -33,7 +33,7 @@ void ABPMTimerActor::Tick(float DeltaTime)
 
 bool ABPMTimerActor::IsInCrotchet()
 {
-	if (FLastBeat + 0.07f >= FTotalTime || FLastBeat + FCrotchet - 0.07f <= FTotalTime)
+	if (FLastBeat + 0.1f >= FTotalTime || FLastBeat + FCrotchet - 0.1f <= FTotalTime)
 		return true;
 
 	return false;
@@ -41,7 +41,7 @@ bool ABPMTimerActor::IsInCrotchet()
 
 bool ABPMTimerActor::IsInQuaver()
 {
-	if (FLastBeat + FCrotchet / 2.f - 0.07f < FTotalTime && FLastBeat + FCrotchet / 2.f + 0.07f > FTotalTime)
+	if (FLastBeat + FCrotchet / 2.f - 0.1f <= FTotalTime && FLastBeat + FCrotchet / 2.f + 0.1f >= FTotalTime)
 		return true;
 	
 	return  false;

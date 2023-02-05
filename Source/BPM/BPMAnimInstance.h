@@ -22,6 +22,12 @@ public:
 	void PlayPlayerFireMontage();
 	void PlayPistolFireMontage();
 
+	void PlayPlayerReloadStartMontage();
+	void PlayPistolReloadStartMontage();
+	
+	void PlayPlayerReloadEndMontage();
+	void PlayPistolReloadEndMontage();
+
 private:
 	enum STATE
 	{
@@ -39,5 +45,17 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
 	UAnimMontage* PistolFireMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* PlayerReloadStartMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* PistolReloadStartMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* PlayerReloadEndMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* PistolReloadEndMontage;
 	
 };

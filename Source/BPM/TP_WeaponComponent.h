@@ -22,9 +22,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	USoundBase* ReloadStartSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	USoundBase* ReloadEndSound;
+	
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	UAnimMontage* FireAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UAnimMontage* ReloadStartAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UAnimMontage* ReloadEndAnimation;
 
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -35,6 +47,15 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystem* MuzzleEffect;
+
+	UPROPERTY(VisibleAnywhere)
+	int CurrentAmmo;
+
+	UPROPERTY(VisibleAnywhere)
+	int MaxAmmo;
+
+	UFUNCTION()
+	int GetCurrentAmmo() { return CurrentAmmo; };
 	
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
@@ -46,9 +67,12 @@ public:
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
-	
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Reload();
+
+	UFUNCTION()
+	void ReloadStart();	
+
+	UFUNCTION()
+	void ReloadEnd();
 
 protected:
 	/** Ends gameplay for this component. */

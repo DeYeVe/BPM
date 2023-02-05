@@ -122,21 +122,69 @@ public:
 	UPROPERTY()
 	class ABPMTimerActor* TimerActor;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
 	USoundBase* OffBeatSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
+	USoundBase* DashSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
+	USoundBase* FootstepSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
+	UAudioComponent* FootstepAudioComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
+	USoundBase* NoAmmoSound;
+
+private:
+	UPROPERTY()
+	bool bCanAct = true;
 
 	UPROPERTY()
-	bool CanAct = true;
+	bool bIsInCrotchet = false;
 
 	UPROPERTY()
-	bool IsInCrotchet = false;
+	bool bIsDashing = false;
+
+	UPROPERTY()
+	int DashInterval = 0;
+	
+	UPROPERTY()
+	float DashSpeed = 2000.f;
+
+	UPROPERTY()
+	float DashDuration = 0.3f;
+
+	UPROPERTY()
+	float DashTimeRemaining = 0.f;
+
+	UPROPERTY()
+	bool bISReloading = false;
+
+
 	
 
 public:
+	UFUNCTION()
 	void Fire();
-	
-	void Reload();
 
-	void Dash();
+	UFUNCTION()
+	void DashStart();	
+
+	UFUNCTION()
+	void DashEnd();
+	
+	UFUNCTION()
+	void ReloadStart();	
+
+	UFUNCTION()
+	void ReloadEnd();
+	
+	UFUNCTION()
+	void NoAmmo();
+
+	UFUNCTION()
+	void PlayOffBeat();
 	
 };

@@ -8,7 +8,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "BPMTimerActor.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,12 +64,32 @@ ABPMCharacter::ABPMCharacter()
 	
 	WeaponComponent = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("WeaponComp"));
 
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireSoundBase(TEXT("SoundWave'/Game/Sounds/SE/OffBeat.OffBeat'"));
-	if (FireSoundBase.Succeeded())
+	//sound
+	static ConstructorHelpers::FObjectFinder<USoundBase> OffBeatSoundBase(TEXT("SoundWave'/Game/Sounds/SE/OffBeat.OffBeat'"));
+	if (OffBeatSoundBase.Succeeded())
 	{
-		OffBeatSound = FireSoundBase.Object;
+		OffBeatSound = OffBeatSoundBase.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> DashSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Dash.Dash'"));
+	if (DashSoundBase.Succeeded())
+	{
+		DashSound = DashSoundBase.Object;
 	}
 
+	FootstepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepAudioComp"));
+	static ConstructorHelpers::FObjectFinder<USoundBase> FootstepSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Footstep.Footstep'"));
+	if (FootstepSoundBase.Succeeded())
+	{
+		FootstepSound = FootstepSoundBase.Object;
+		FootstepAudioComponent->SetSound(FootstepSound);
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> NoAmmoSoundBase(TEXT("SoundWave'/Game/Sounds/SE/NoAmmo.NoAmmo'"));
+	if (NoAmmoSoundBase.Succeeded())
+	{
+		NoAmmoSound = NoAmmoSoundBase.Object;
+	}
 }
 
 void ABPMCharacter::BeginPlay()
@@ -90,18 +112,45 @@ void ABPMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (TimerActor->IsInCrotchet() && !IsInCrotchet)
+	if (TimerActor->IsInCrotchet() && !bIsInCrotchet)
 	{
-		IsInCrotchet = true;
-		CanAct = true;
+		bIsInCrotchet = true;
+		bCanAct = true;
 		UE_LOG(LogTemp, Log, TEXT("Change to c"));
+		if(DashInterval > 0)
+			DashInterval--;
 	}
 	
-	if (TimerActor->IsInQuaver() && IsInCrotchet)
+	if (TimerActor->IsInQuaver() && bIsInCrotchet)
 	{
-		IsInCrotchet = false;
-		CanAct = true;
+		bIsInCrotchet = false;
+		bCanAct = true;
 		UE_LOG(LogTemp, Log, TEXT("Change to q"));
+		if(DashInterval > 0)
+			DashInterval--;
+	}
+
+	if(bIsDashing)
+	{
+		DashTimeRemaining -= DeltaTime;
+		FVector DashDirection = GetCharacterMovement()->GetLastInputVector();
+		
+		GetCharacterMovement()->MoveSmooth(DashDirection * DashSpeed, DeltaTime);
+				
+		if(DashTimeRemaining <= 0.f)
+		{
+			DashEnd();
+		}
+	}
+
+	if(GetCharacterMovement()->Velocity.Size() > 0.f && !bIsDashing && !(GetCharacterMovement()->IsFalling()))
+	{
+		if(!FootstepAudioComponent->IsPlaying())
+			FootstepAudioComponent->Play();
+	}
+	else
+	{
+		FootstepAudioComponent->Stop();
 	}
 }
 
@@ -119,7 +168,7 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABPMCharacter::Fire);
 	
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABPMCharacter::Reload);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABPMCharacter::ReloadStart);
 	
 	// // Enable touchscreen input
 	// EnableTouchscreenMovement(PlayerInputComponent);
@@ -128,7 +177,8 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &ABPMCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right / Left", this, &ABPMCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &ABPMCharacter::Dash);
+	PlayerInputComponent->BindAction("Dash Start", IE_Pressed, this, &ABPMCharacter::DashStart);
+	PlayerInputComponent->BindAction("Dash End", IE_Released, this, &ABPMCharacter::DashEnd);
 	
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "Mouse" versions handle devices that provide an absolute delta, such as a mouse.
@@ -217,40 +267,135 @@ bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInput
 
 void ABPMCharacter::Fire()
 {
-	if(!CanAct)
-	{
+	if(!bCanAct)
+	{		
+		PlayOffBeat();
+		
 		return;
 	}
 	
-	if(TimerActor->IsInCrotchet() || TimerActor->IsInQuaver())
-	{
-		UE_LOG(LogTemp, Log, TEXT("Fire"));
-
-		if(AnimInstance)
-		{
-			AnimInstance->PlayPlayerFireMontage();
-			Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
-		}
-		OnUseItem.Broadcast();
-		WeaponComponent->Fire();
-		
-		CanAct = false;
-	}
-	else
+	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
-		if (OffBeatSound != nullptr)
-		{
-			UE_LOG(LogTemp, Log, TEXT("PlayFireSound"));
-			UGameplayStatics::PlaySoundAtLocation(this, OffBeatSound, GetActorLocation());
-		}		
+		PlayOffBeat();
+
+		return;
 	}
 
+	if(WeaponComponent->GetCurrentAmmo() == 0)
+	{
+		NoAmmo();
+		return;
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("Fire"));
+
+	if(AnimInstance)
+	{
+		AnimInstance->PlayPlayerFireMontage();
+		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
+	}
+	//OnUseItem.Broadcast();
+	WeaponComponent->Fire();
+		
+	bCanAct = false;
+	bISReloading = false;
+
 }
 
-void ABPMCharacter::Reload()
+void ABPMCharacter::DashStart()
 {
+	if(!bCanAct || bIsDashing || DashInterval != 0)
+	{
+		PlayOffBeat();
+
+		return;
+	}
+
+	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
+	{		
+		PlayOffBeat();
+
+		return;
+	}
+
+	if (DashSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DashSound, GetActorLocation());
+	}
+
+	bIsDashing = true;
+	bCanAct = false;
+	GetCharacterMovement()->GravityScale = 0.f;
+	DashTimeRemaining = DashDuration;
+	DashInterval = 2;
 }
 
-void ABPMCharacter::Dash()
+void ABPMCharacter::DashEnd()
 {
+	bIsDashing = false;
+	DashTimeRemaining = 0.f;
+	GetCharacterMovement()->GravityScale = 1.f;
+}
+
+void ABPMCharacter::ReloadStart()
+{
+	if(!bCanAct)
+	{		
+		PlayOffBeat();
+		
+		return;
+	}
+
+	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
+	{		
+		PlayOffBeat();
+
+		return;
+	}
+
+	if(bISReloading)
+	{
+		ReloadEnd();
+		
+		return;
+	}
+	
+	if(AnimInstance)
+	{
+		AnimInstance->PlayPlayerReloadStartMontage();
+		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolReloadStartMontage();
+	}
+	
+	bISReloading = true;
+	bCanAct = false;
+	WeaponComponent->ReloadStart();
+}
+
+void ABPMCharacter::ReloadEnd()
+{		
+	if(AnimInstance)
+	{
+		AnimInstance->PlayPlayerReloadEndMontage();
+		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolReloadEndMontage();
+	}
+	
+	bISReloading = false;
+	bCanAct = false;
+	WeaponComponent->ReloadEnd();
+}
+
+void ABPMCharacter::NoAmmo()
+{
+	if (NoAmmoSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, NoAmmoSound, GetActorLocation());
+	}
+}
+
+void ABPMCharacter::PlayOffBeat()
+{
+	if (OffBeatSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, OffBeatSound, GetActorLocation());
+	}
 }
