@@ -3,25 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BPMMonster.h"
 #include "GameFramework/Character.h"
-#include "BPMMonster.generated.h"
+#include "BPMDemonBat.generated.h"
 
 UCLASS()
-class BPM_API ABPMMonster : public ACharacter
+class BPM_API ABPMDemonBat : public ABPMMonster
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere, Category=Mesh)
-	USkeletalMeshComponent* MeshMonster;
-	USkeletalMeshComponent* GetMeshMonster() const { return MeshMonster; }
-	
-	UPROPERTY(VisibleAnywhere)
-	class UBPMAnimInstance* AnimInstance;
-
-public:
 	// Sets default values for this character's properties
-	ABPMMonster();
+	ABPMDemonBat();
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,23 +27,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
-	UPROPERTY()
-	int Damage;
+private:
+	float MoveIntervalTime;
 
-	UPROPERTY()
-	int MaxHP;
-
-	UPROPERTY()
-	int CurHP;
-
-	UPROPERTY()
-	float MoveSpeed;
+	float AttackCoolDown;
 
 public:
-	UFUNCTION()
-	int GetDamage() const { return Damage; };
-
-	//UFUNCTION()
-	//void Die();
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class ABPMProjectile> ProjectileClass;
 };

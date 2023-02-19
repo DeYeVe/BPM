@@ -122,6 +122,12 @@ public:
 	UPROPERTY()
 	class ABPMTimerActor* TimerActor;
 	
+	UPROPERTY()
+	class ABPMGameMode* GameMode;
+
+	UPROPERTY()
+	class UBPMHUDWidget* HUDWidget;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
 	USoundBase* OffBeatSound;
 	
@@ -136,6 +142,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
 	USoundBase* NoAmmoSound;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Sound)
+	USoundBase* HitSound;
 
 private:
 	UPROPERTY()
@@ -162,8 +171,11 @@ private:
 	UPROPERTY()
 	bool bISReloading = false;
 
-
+	UPROPERTY()
+	int CurHP;
 	
+	UPROPERTY()
+	int MaxHP;	
 
 public:
 	UFUNCTION()
@@ -186,5 +198,8 @@ public:
 
 	UFUNCTION()
 	void PlayOffBeat();
+
+	UFUNCTION()
+	void GetDamage(int Damage);
 	
 };

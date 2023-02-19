@@ -35,7 +35,6 @@ bool ABPMTimerActor::IsInCrotchet()
 {
 	if (FLastBeat + 0.1f >= FTotalTime || FLastBeat + FCrotchet - 0.1f <= FTotalTime)
 		return true;
-
 	return false;
 }
 

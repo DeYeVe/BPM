@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BPMTimerActor.h"
 #include "GameFramework/GameModeBase.h"
 #include "BPMGameMode.generated.h"
 
@@ -13,6 +14,28 @@ class ABPMGameMode : public AGameModeBase
 
 public:
 	ABPMGameMode();
+
+	UPROPERTY()
+	AActor* BGMActor;
+	
+	UPROPERTY()
+	UAudioComponent* BGMComponent;
+
+	UPROPERTY()
+	class USoundCue* BGMSoundCue;
+
+	UPROPERTY()
+	ABPMTimerActor* TimerActor;
+	
+	UPROPERTY()
+	TSubclassOf<UUserWidget> HUDWidget;
+
+	UPROPERTY()
+	UUserWidget* CurWidget;
+
+public:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 };
 
 

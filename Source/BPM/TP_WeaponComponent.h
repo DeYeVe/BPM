@@ -55,7 +55,10 @@ public:
 	int MaxAmmo;
 
 	UFUNCTION()
-	int GetCurrentAmmo() { return CurrentAmmo; };
+	int GetCurAmmo() { return CurrentAmmo; };
+	
+	UFUNCTION()
+	int GetMaxAmmo() { return MaxAmmo; };
 	
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();

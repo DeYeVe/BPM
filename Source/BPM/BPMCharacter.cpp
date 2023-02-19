@@ -3,6 +3,7 @@
 #include "BPMCharacter.h"
 #include "BPMProjectile.h"
 #include "BPMAnimInstance.h"
+#include "BPMGameMode.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -11,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
+#include "BPMHUDWidget.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,16 @@ ABPMCharacter::ABPMCharacter()
 	{
 		NoAmmoSound = NoAmmoSoundBase.Object;
 	}
+	
+	static ConstructorHelpers::FObjectFinder<USoundBase> HitSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Hit.Hit'"));
+	if (HitSoundBase.Succeeded())
+	{
+		HitSound = HitSoundBase.Object;
+	}
+
+	//stat
+	MaxHP = 100;
+	CurHP = MaxHP;
 }
 
 void ABPMCharacter::BeginPlay()
@@ -101,6 +113,9 @@ void ABPMCharacter::BeginPlay()
 	WeaponComponent->AttachWeapon(this);
 
 	TimerActor = Cast<ABPMTimerActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ABPMTimerActor::StaticClass()));
+
+	GameMode = Cast<ABPMGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	HUDWidget = Cast<UBPMHUDWidget>(GameMode->CurWidget);
 }
 
 void ABPMCharacter::PostInitializeComponents()
@@ -116,7 +131,7 @@ void ABPMCharacter::Tick(float DeltaTime)
 	{
 		bIsInCrotchet = true;
 		bCanAct = true;
-		UE_LOG(LogTemp, Log, TEXT("Change to c"));
+		//UE_LOG(LogTemp, Log, TEXT("Change to c"));
 		if(DashInterval > 0)
 			DashInterval--;
 	}
@@ -125,12 +140,12 @@ void ABPMCharacter::Tick(float DeltaTime)
 	{
 		bIsInCrotchet = false;
 		bCanAct = true;
-		UE_LOG(LogTemp, Log, TEXT("Change to q"));
+		//UE_LOG(LogTemp, Log, TEXT("Change to q"));
 		if(DashInterval > 0)
 			DashInterval--;
 	}
 
-	if(bIsDashing)
+	if (bIsDashing)
 	{
 		DashTimeRemaining -= DeltaTime;
 		FVector DashDirection = GetCharacterMovement()->GetLastInputVector();
@@ -143,15 +158,29 @@ void ABPMCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	if(GetCharacterMovement()->Velocity.Size() > 0.f && !bIsDashing && !(GetCharacterMovement()->IsFalling()))
+	if (GetCharacterMovement()->Velocity.Size() > 0.f && !bIsDashing && !(GetCharacterMovement()->IsFalling()))
 	{
-		if(!FootstepAudioComponent->IsPlaying())
+		if (!FootstepAudioComponent->IsPlaying())
 			FootstepAudioComponent->Play();
 	}
 	else
 	{
 		FootstepAudioComponent->Stop();
 	}
+
+	//UI
+	if (GameMode)
+	{
+		if (HUDWidget)
+		{
+			
+			HUDWidget->SetCurAmmo(FString::Printf(TEXT("%1d"),WeaponComponent->GetCurAmmo()));
+			HUDWidget->SetMaxAmmo(FString::Printf(TEXT("%1d"),WeaponComponent->GetMaxAmmo()));
+			HUDWidget->SetCurHP(FString::Printf(TEXT("%3d"),CurHP));
+			HUDWidget->SetMaxHP(FString::Printf(TEXT("%3d"),MaxHP));
+		}
+	}
+		
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -267,21 +296,21 @@ bool ABPMCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInput
 
 void ABPMCharacter::Fire()
 {
-	if(!bCanAct)
+	if (!bCanAct)
 	{		
 		PlayOffBeat();
 		
 		return;
 	}
 	
-	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
+	if (!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
 		PlayOffBeat();
 
 		return;
 	}
 
-	if(WeaponComponent->GetCurrentAmmo() == 0)
+	if (WeaponComponent->GetCurAmmo() == 0)
 	{
 		NoAmmo();
 		return;
@@ -289,7 +318,7 @@ void ABPMCharacter::Fire()
 	
 	UE_LOG(LogTemp, Log, TEXT("Fire"));
 
-	if(AnimInstance)
+	if (AnimInstance)
 	{
 		AnimInstance->PlayPlayerFireMontage();
 		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolFireMontage();
@@ -304,14 +333,14 @@ void ABPMCharacter::Fire()
 
 void ABPMCharacter::DashStart()
 {
-	if(!bCanAct || bIsDashing || DashInterval != 0)
+	if (!bCanAct || bIsDashing || DashInterval != 0)
 	{
 		PlayOffBeat();
 
 		return;
 	}
 
-	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
+	if (!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
 		PlayOffBeat();
 
@@ -339,28 +368,28 @@ void ABPMCharacter::DashEnd()
 
 void ABPMCharacter::ReloadStart()
 {
-	if(!bCanAct)
+	if (!bCanAct)
 	{		
 		PlayOffBeat();
 		
 		return;
 	}
 
-	if(!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
+	if (!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
 		PlayOffBeat();
 
 		return;
 	}
 
-	if(bISReloading)
+	if (bISReloading)
 	{
 		ReloadEnd();
 		
 		return;
 	}
 	
-	if(AnimInstance)
+	if (AnimInstance)
 	{
 		AnimInstance->PlayPlayerReloadStartMontage();
 		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolReloadStartMontage();
@@ -373,7 +402,7 @@ void ABPMCharacter::ReloadStart()
 
 void ABPMCharacter::ReloadEnd()
 {		
-	if(AnimInstance)
+	if (AnimInstance)
 	{
 		AnimInstance->PlayPlayerReloadEndMontage();
 		Cast<UBPMAnimInstance>(WeaponMesh->GetAnimInstance())->PlayPistolReloadEndMontage();
@@ -398,4 +427,17 @@ void ABPMCharacter::PlayOffBeat()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, OffBeatSound, GetActorLocation());
 	}
+}
+
+void ABPMCharacter::GetDamage(int Damage)
+{
+	if (HitSound != nullptr)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+	}
+
+	if(HUDWidget)
+		HUDWidget->OnPlayerHit();
+	
+	CurHP -= Damage;
 }
