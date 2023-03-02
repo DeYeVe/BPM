@@ -1,0 +1,6 @@
+Diffuse=JC_PoisonScorpion_Diffuse1
+Normal=JC_PoisonScorpion_Normal
+SpecPower=JC_PoisonScorpion_Specular
+Other[0]=T_AtmosphericCloudNoise01
+Other[1]=ScorpEMS
+Other[2]=ScorpionChargingLinear

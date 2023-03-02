@@ -35,22 +35,34 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	int Damage;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	int MaxHP;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	int CurHP;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	float MoveSpeed;
+
+	UPROPERTY()
+	float AttackCoolDown;
+
+	UPROPERTY()
+	bool IsAttacking;
 
 public:
 	UFUNCTION()
 	int GetDamage() const { return Damage; };
+	
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
+	UPROPERTY()	
+	class ABPMAIController* BPMAIController;
 
-	//UFUNCTION()
-	//void Die();
+	UPROPERTY(EditDefaultsOnly, Category=Item)
+	TSubclassOf<class ABPMItem> CoinClass;
 };

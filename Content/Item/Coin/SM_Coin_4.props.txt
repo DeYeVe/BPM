@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = MaterialInstanceConstant'UmodelSaved/BPM/Content/ModularLostRuinKit/Materials/Props/MI_Coins.MI_Coins'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = MaterialInstanceConstant'UmodelSaved/BPM/Content/ModularLostRuinKit/Materials/Props/MI_Coins.MI_Coins'
+        MaterialSlotName = Coins
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 47.967, 34.4625, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=0, Y=-3.33786e-06, Z=-3.57628e-07 }
+    BoxExtent = { X=6.80307, Y=6.80307, Z=1.20636 }
+    SphereRadius = 6.9092
+}

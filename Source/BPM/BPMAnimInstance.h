@@ -27,6 +27,8 @@ public:
 	
 	void PlayPlayerReloadEndMontage();
 	void PlayPistolReloadEndMontage();
+	
+	void PlayScorpionAttackMontage();
 
 private:
 	enum STATE
@@ -57,5 +59,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
 	UAnimMontage* PistolReloadEndMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Scorpion, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* ScorpionAttackMontage;
 	
 };

@@ -28,9 +28,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	UPROPERTY()
 	float MoveIntervalTime;
 
-	float AttackCoolDown;
+	UPROPERTY()
+	float RandomFloat;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)

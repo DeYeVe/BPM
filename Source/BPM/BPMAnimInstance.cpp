@@ -41,6 +41,12 @@ UBPMAnimInstance::UBPMAnimInstance()
 		PistolReloadEndMontage = PistolReloadEndAM.Object;
 	}
 	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ScorpionAttackAM(TEXT("AnimMontage'/Game/Monsters/Scorpion/AM_ScorpionAttack.AM_ScorpionAttack'"));
+	if (ScorpionAttackAM.Succeeded())
+	{
+		ScorpionAttackMontage = ScorpionAttackAM.Object;
+	}
+	
 }
 
 void UBPMAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -76,4 +82,9 @@ void UBPMAnimInstance::PlayPlayerReloadEndMontage()
 void UBPMAnimInstance::PlayPistolReloadEndMontage()
 {
 	Montage_Play(PistolReloadEndMontage);
+}
+
+void UBPMAnimInstance::PlayScorpionAttackMontage()
+{
+	Montage_Play(ScorpionAttackMontage);
 }

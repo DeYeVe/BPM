@@ -22,6 +22,7 @@ ABPMCharacter::ABPMCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->SetCollisionProfileName("Player");
 
 	// set our turn rates for input
 	TurnRateGamepad = 45.f;
@@ -127,6 +128,7 @@ void ABPMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// condition check
 	if (TimerActor->IsInCrotchet() && !bIsInCrotchet)
 	{
 		bIsInCrotchet = true;
@@ -151,7 +153,7 @@ void ABPMCharacter::Tick(float DeltaTime)
 		FVector DashDirection = GetCharacterMovement()->GetLastInputVector();
 		
 		GetCharacterMovement()->MoveSmooth(DashDirection * DashSpeed, DeltaTime);
-				
+		
 		if(DashTimeRemaining <= 0.f)
 		{
 			DashEnd();
@@ -168,19 +170,31 @@ void ABPMCharacter::Tick(float DeltaTime)
 		FootstepAudioComponent->Stop();
 	}
 
-	//UI
+	// UI
 	if (GameMode)
 	{
 		if (HUDWidget)
 		{
 			
-			HUDWidget->SetCurAmmo(FString::Printf(TEXT("%1d"),WeaponComponent->GetCurAmmo()));
-			HUDWidget->SetMaxAmmo(FString::Printf(TEXT("%1d"),WeaponComponent->GetMaxAmmo()));
-			HUDWidget->SetCurHP(FString::Printf(TEXT("%3d"),CurHP));
-			HUDWidget->SetMaxHP(FString::Printf(TEXT("%3d"),MaxHP));
+			HUDWidget->SetCurAmmo(FString::Printf(TEXT("%1d"), WeaponComponent->GetCurAmmo()));
+			HUDWidget->SetMaxAmmo(FString::Printf(TEXT("%1d"), WeaponComponent->GetMaxAmmo()));
+			HUDWidget->SetCurHP(FString::Printf(TEXT("%3d"), CurHP));
+			HUDWidget->SetMaxHP(FString::Printf(TEXT("%3d"), MaxHP));
+			HUDWidget->SetCoin(FString::Printf(TEXT("%2d"), Coin));
 		}
 	}
-		
+
+	// gain coins
+	TArray<AActor*> OverlappingActors;
+	GetCapsuleComponent()->GetOverlappingActors(OverlappingActors);
+	for (AActor* Actor : OverlappingActors)
+	{
+		if (Actor->ActorHasTag(TEXT("Coin")))
+		{
+			Coin++;
+			Actor->Destroy();
+		}			
+	}		
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -302,7 +316,8 @@ void ABPMCharacter::Fire()
 		
 		return;
 	}
-	
+	if(TimerActor)
+		UE_LOG(LogTemp, Log, TEXT("Has tiactor"));
 	if (!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
 		PlayOffBeat();
@@ -429,7 +444,8 @@ void ABPMCharacter::PlayOffBeat()
 	}
 }
 
-void ABPMCharacter::GetDamage(int Damage)
+float ABPMCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
 {
 	if (HitSound != nullptr)
 	{
@@ -439,5 +455,7 @@ void ABPMCharacter::GetDamage(int Damage)
 	if(HUDWidget)
 		HUDWidget->OnPlayerHit();
 	
-	CurHP -= Damage;
+	CurHP -= DamageAmount;
+	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

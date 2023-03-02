@@ -28,8 +28,8 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* MaxHP;
 	
-	/*UPROPERTY(meta=(BindWidget))
-	class UImage* Red;*/
+	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* Coin;
 	
 public:
 	UFUNCTION()
@@ -43,6 +43,9 @@ public:
 	
 	UFUNCTION()
 	void SetMaxHP(FString str) { MaxHP->SetText(FText::FromString(str)); };
+	
+	UFUNCTION()
+	void SetCoin(FString str) { Coin->SetText(FText::FromString(str)); };
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

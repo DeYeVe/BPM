@@ -2,7 +2,6 @@
 
 
 #include "BPMDemonBat.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "BPMProjectile.h"
@@ -22,11 +21,22 @@ ABPMDemonBat::ABPMDemonBat()
 	MeshMonster->SetRelativeLocation(FVector(20.0f, 0.0f, -50.f));
 	MeshMonster->SetRelativeScale3D(FVector(0.9f, 0.9f, 0.9f));
 
-	MaxHP = 50;
+	MaxHP = 100;
 	CurHP = MaxHP;
 	MoveSpeed = 300.f;
 	MoveIntervalTime = 4.f;
 	AttackCoolDown = 1.5f;
+	
+	RandomFloat = FMath::FRand();
+	MoveIntervalTime += RandomFloat;
+	RandomFloat = FMath::FRand();
+	AttackCoolDown += RandomFloat;
+
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	if(BPMAIController)
+	{
+		DetachFromControllerPendingDestroy();
+	}
 }
 
 // Called when the game starts or when spawned
@@ -64,7 +74,8 @@ void ABPMDemonBat::Tick(float DeltaTime)
 				FActorSpawnParameters ActorSpawnParams;
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
-				World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation(), NormalDirection.Rotation(), ActorSpawnParams);
+				ABPMProjectile* projectile = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation(), NormalDirection.Rotation(), ActorSpawnParams);
+				projectile->SetProjectileOwner(this);
 			}
 		}
 	}
@@ -90,7 +101,7 @@ void ABPMDemonBat::Tick(float DeltaTime)
 		GetCharacterMovement()->MoveSmooth((HorizontalDirection * - MoveSpeed), DeltaTime);
 	}
 	
-	if (Direction.Size() > 1200.f)
+	if (Direction.Size() > 1200.f + 400.f * RandomFloat)
 	{
 		NormalDirection.Z = 0.f;
 		GetCharacterMovement()->MoveSmooth((NormalDirection * MoveSpeed), DeltaTime);

@@ -9,6 +9,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
+#include "BPMMonster.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -16,6 +17,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	// Default offset from the character location for projectiles to spawn
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
+	//sound
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireSoundBase(TEXT("SoundWave'/Game/Sounds/SE/PistolFire.PistolFire'"));
 	if (FireSoundBase.Succeeded())
 	{
@@ -33,15 +35,29 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	{
 		ReloadEndSound = ReloadEndSoundBase.Object;
 	}
-	
+
+	// FX
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> MuzzleObj (TEXT("ParticleSystem'/Game/ParagonDrongo/FX/Particles/Abilities/Primary/FX/P_Drongo_Primary_MuzzleFlash.P_Drongo_Primary_MuzzleFlash'"));
 	if (MuzzleObj.Succeeded())
 	{
 		MuzzleEffect = MuzzleObj.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> HitWorldEffectObj (TEXT("ParticleSystem'/Game/ParagonTwinblast/FX/Particles/Abilities/Ultimate/FX/P_TwinBlast_Ult2_HitWorld.P_TwinBlast_Ult2_HitWorld'"));
+	if (HitWorldEffectObj.Succeeded())
+	{
+		HitWorldEffect = HitWorldEffectObj.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> HitCharacterEffectObj (TEXT("ParticleSystem'/Game/ParagonTwinblast/FX/Particles/Abilities/Ultimate/FX/P_TwinBlast_Ult2_HitCharacter.P_TwinBlast_Ult2_HitCharacter'"));
+	if (HitCharacterEffectObj.Succeeded())
+	{
+		HitCharacterEffect = HitCharacterEffectObj.Object;
+	}
+	
 	MaxAmmo = 8;
 	CurrentAmmo = MaxAmmo;
+	Damage = 50.f;
 }
 
 
@@ -85,52 +101,39 @@ void UTP_WeaponComponent::Fire()
 		if (IsHitResult)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit"));
-		}
-		else
-		{
 			
+			if(HitResult.GetActor()->IsA(ABPMMonster::StaticClass()))
+			{
+				FPointDamageEvent DamageEvent;
+				DamageEvent.HitInfo = HitResult;
+				
+				Cast<ABPMMonster>(HitResult.GetActor())->TakeDamage(50.f, DamageEvent, Character->GetController(), Character);
+
+				// 몹 타격 이펙트
+				if (HitCharacterEffect != nullptr)
+				{
+					GameStatic->SpawnEmitterAtLocation(GetWorld(), HitCharacterEffect, HitResult.Location, FRotator::ZeroRotator, FVector(1.f));
+				}
+			}
+			else
+			{
+				// 땅 타격 이펙트
+				if (HitWorldEffect != nullptr)
+				{
+					GameStatic->SpawnEmitterAtLocation(GetWorld(), HitWorldEffect, HitResult.Location, FRotator::ZeroRotator, FVector(1.f));
+				}
+			}
 		}
+		
 	}
 	
 	if (MuzzleEffect != nullptr)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("has muzzlefx"));
 		GameStatic->SpawnEmitterAttached(MuzzleEffect, Character->GetWeaponMesh(), FName("Muzzle"),
-			FVector(ForceInit), FRotator::ZeroRotator, FVector(0.005));
+			FVector(ForceInit), FRotator::ZeroRotator, FVector(0.005f));
 	}
 	
-	/*
-	// Try and fire a projectile
-	if (ProjectileClass != nullptr)
-	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			// APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-			// const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			
-			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			UE_LOG(LogTemp, Log, TEXT("%f %f %f"), SpawnRotation.Vector().X, SpawnRotation.Vector().Y, SpawnRotation.Vector().Z);
-
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-			
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-	
-			// Spawn the projectile at the muzzle
-			World->SpawnActor<ABPMProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
-			if (MuzzleEffect != nullptr)
-			{
-				UE_LOG(LogTemp, Log, TEXT("has muzzlefx"));
-				GameStatic->SpawnEmitterAttached(MuzzleEffect, WeaponMesh, FName("Muzzle"),
-					FVector(ForceInit), FRotator::ZeroRotator, FVector(0.005));
-			}
-		}
-	}*/
 	
 	// Try and play the sound if specified
 	if (FireSound != nullptr)

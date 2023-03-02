@@ -39,9 +39,15 @@ void ABPMProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	{
 		if(OtherActor->IsA(ABPMCharacter::StaticClass()))
 		{
-			Cast<ABPMCharacter>(OtherActor)->GetDamage(25);
+			FDamageEvent DamageEvent;
+			Cast<ABPMCharacter>(OtherActor)->TakeDamage(25.f, DamageEvent, DemonBat->GetController(), DemonBat);
 			UE_LOG(LogTemp, Log, TEXT("Demon Bat Fire Hit Player"));			
 		}
 		Destroy();
 	}
+}
+
+void ABPMProjectile::SetProjectileOwner(ABPMDemonBat* TargetDemonBat)
+{
+	DemonBat = TargetDemonBat;
 }

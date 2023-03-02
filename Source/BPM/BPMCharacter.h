@@ -175,7 +175,10 @@ private:
 	int CurHP;
 	
 	UPROPERTY()
-	int MaxHP;	
+	int MaxHP;
+	
+	UPROPERTY()
+	int Coin;	
 
 public:
 	UFUNCTION()
@@ -198,8 +201,8 @@ public:
 
 	UFUNCTION()
 	void PlayOffBeat();
-
+	
 	UFUNCTION()
-	void GetDamage(int Damage);
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
 };

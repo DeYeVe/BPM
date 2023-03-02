@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BPMDemonBat.h"
+#include "BPMMonster.h"
 #include "GameFramework/Actor.h"
 #include "BPMProjectile.generated.h"
 
@@ -33,5 +35,14 @@ public:
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	
+private:
+	UPROPERTY(VisibleAnywhere)
+	ABPMDemonBat* DemonBat;
+
+public:
+	UFUNCTION()
+	void SetProjectileOwner(ABPMDemonBat* TargetDemonBat);
 };
 

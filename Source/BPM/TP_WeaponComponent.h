@@ -47,12 +47,21 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystem* MuzzleEffect;
+	
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystem* HitWorldEffect;
+	
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystem* HitCharacterEffect;
 
 	UPROPERTY(VisibleAnywhere)
 	int CurrentAmmo;
 
 	UPROPERTY(VisibleAnywhere)
 	int MaxAmmo;
+	
+	UPROPERTY()
+	float Damage;	
 
 	UFUNCTION()
 	int GetCurAmmo() { return CurrentAmmo; };
