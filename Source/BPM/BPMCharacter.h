@@ -178,7 +178,10 @@ private:
 	int MaxHP;
 	
 	UPROPERTY()
-	int Coin;	
+	int Coin;
+
+	UPROPERTY()
+	FName InteractingItem;
 
 public:
 	UFUNCTION()
@@ -201,6 +204,9 @@ public:
 
 	UFUNCTION()
 	void PlayOffBeat();
+	
+	UFUNCTION()
+	void Purchase();
 	
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;

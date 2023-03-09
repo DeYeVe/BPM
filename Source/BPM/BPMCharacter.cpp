@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 #include "BPMHUDWidget.h"
+#include "BPMItem.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,6 +104,9 @@ ABPMCharacter::ABPMCharacter()
 	//stat
 	MaxHP = 100;
 	CurHP = MaxHP;
+	
+	InteractingItem = TEXT("None");
+	GetCharacterMovement()->MaxAcceleration = 10000.f;
 }
 
 void ABPMCharacter::BeginPlay()
@@ -194,7 +198,69 @@ void ABPMCharacter::Tick(float DeltaTime)
 			Coin++;
 			Actor->Destroy();
 		}			
-	}		
+	}
+
+	// Purchase Item
+	{
+		FHitResult HitResult;
+		FCollisionQueryParams Params(NAME_None, false, this);
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes; // 히트 가능한 오브젝트 유형들.
+		TEnumAsByte<EObjectTypeQuery> WorldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
+		TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
+		FVector StartLocation = GetFirstPersonCameraComponent()->GetComponentLocation();
+		FVector EndLocation = GetFirstPersonCameraComponent()->GetComponentLocation()
+			+ GetFirstPersonCameraComponent()->GetForwardVector() * 200;
+
+		bool IsHitResult = GetWorld()->LineTraceSingleByObjectType(
+			HitResult,
+			StartLocation,
+			EndLocation,
+			ObjectTypes,
+			Params);
+		
+		if (IsHitResult)
+		{			
+			if(HitResult.GetActor()->IsA(ABPMItem::StaticClass()))
+			{
+				if(HitResult.GetActor()->ActorHasTag(TEXT("Coin")))
+				{
+					HUDWidget->SetItemCost(FString::Printf(TEXT("")));
+					HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
+					InteractingItem = TEXT("None");	
+				}
+				else if(HitResult.GetActor()->ActorHasTag(TEXT("Potion")))
+				{					
+					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      4 G")));
+					HUDWidget->SetItemInfo(FString::Printf(TEXT("HP 25 Up")));
+					InteractingItem = TEXT("Potion");	
+				}
+				else if(HitResult.GetActor()->ActorHasTag(TEXT("Clip")))
+				{					
+					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
+					HUDWidget->SetItemInfo(FString::Printf(TEXT("Max Ammo 1 Up")));
+					InteractingItem = TEXT("Clip");	
+				}
+				else if(HitResult.GetActor()->ActorHasTag(TEXT("Feather")))
+				{					
+					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
+					HUDWidget->SetItemInfo(FString::Printf(TEXT("Speed Up")));
+					InteractingItem = TEXT("Feather");	
+				}
+			}
+			else
+			{				
+				HUDWidget->SetItemCost(FString::Printf(TEXT("")));
+				HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
+				InteractingItem = TEXT("None");	
+			}
+		}
+		else
+		{
+			HUDWidget->SetItemCost(FString::Printf(TEXT("")));
+			HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
+			InteractingItem = TEXT("None");					
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -212,6 +278,8 @@ void ABPMCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABPMCharacter::Fire);
 	
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABPMCharacter::ReloadStart);
+	
+	PlayerInputComponent->BindAction("Purchase", IE_Pressed, this, &ABPMCharacter::Purchase);
 	
 	// // Enable touchscreen input
 	// EnableTouchscreenMovement(PlayerInputComponent);
@@ -444,8 +512,36 @@ void ABPMCharacter::PlayOffBeat()
 	}
 }
 
+void ABPMCharacter::Purchase()
+{
+	if(InteractingItem.IsEqual(TEXT("Potion")))
+	{	
+		if(Coin >= 4 && MaxHP - 25 >= CurHP)
+		{
+			Coin -= 4;
+			CurHP += 25;
+		}
+	}
+	else if(InteractingItem.IsEqual(TEXT("Clip")))
+	{					
+		if(Coin >= 6)
+		{
+			Coin -= 6;
+			WeaponComponent->MaxAmmo++;
+		}
+	}
+	else if(InteractingItem.IsEqual(TEXT("Feather")))
+	{				
+		if(Coin >= 6)
+		{
+			Coin -= 6;
+			GetCharacterMovement()->MaxWalkSpeed += 500.f;
+		}
+	}
+}
+
 float ABPMCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                                AActor* DamageCauser)
 {
 	if (HitSound != nullptr)
 	{

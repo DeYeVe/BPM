@@ -12,7 +12,7 @@ ABPMItem::ABPMItem()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("ItemBoxComponent"));
-	BoxComponent->InitBoxExtent(FVector(5.f, 5.f, 5.f));
+	BoxComponent->InitBoxExtent(FVector(5.f, 5.f, 50.f));
 	BoxComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 	BoxComponent->SetGenerateOverlapEvents(true);
 	SetActorEnableCollision(true);

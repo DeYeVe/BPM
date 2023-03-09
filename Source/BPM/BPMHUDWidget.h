@@ -31,6 +31,12 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* Coin;
 	
+	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* ItemCost;
+	
+	UPROPERTY(meta=(BindWidget))
+	class UTextBlock* ItemInfo;
+	
 public:
 	UFUNCTION()
 	void SetCurAmmo(FString str) { CurAmmo->SetText(FText::FromString(str)); };
@@ -46,6 +52,12 @@ public:
 	
 	UFUNCTION()
 	void SetCoin(FString str) { Coin->SetText(FText::FromString(str)); };
+	
+	UFUNCTION()	
+	void SetItemCost(FString str) { ItemCost->SetText(FText::FromString(str)); };
+	
+	UFUNCTION()
+	void SetItemInfo(FString str) { ItemInfo->SetText(FText::FromString(str)); };
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

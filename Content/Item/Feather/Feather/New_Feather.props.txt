@@ -1,0 +1,26 @@
+Materials[1] =
+{
+    Materials[0] = Material3'UmodelSaved/BPM/Content/Pickups/Misc/Feather/Feather_Mat.Feather_Mat'
+}
+SourceModels[0] = {}
+StaticMaterials[1] =
+{
+    StaticMaterials[0] =
+    {
+        MaterialInterface = Material3'UmodelSaved/BPM/Content/Pickups/Misc/Feather/Feather_Mat.Feather_Mat'
+        MaterialSlotName = WorldGridMaterial
+        UVChannelData =
+        {
+            bInitialized = true
+            bOverrideDensities = false
+            LocalUVDensities[4] = { 0, 0, 0, 0 }
+        }
+    }
+}
+Sockets[0] = {}
+ExtendedBounds =
+{
+    Origin = { X=-0.0180321, Y=-0.266326, Z=10.4966 }
+    BoxExtent = { X=11.1993, Y=0.944941, Z=10.2212 }
+    SphereRadius = 15.0873
+}
