@@ -25,4 +25,6 @@ public:
 
 	UPROPERTY()
 	class UBlackboardData* BlackboardData;
+
+	
 };

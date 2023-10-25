@@ -14,6 +14,7 @@
 #include "Components/AudioComponent.h"
 #include "BPMHUDWidget.h"
 #include "BPMItem.h"
+#include "BPMGameInstance.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,7 +104,7 @@ ABPMCharacter::ABPMCharacter()
 
 	//stat
 	MaxHP = 100;
-	CurHP = MaxHP;
+	Range = 1200.f;
 	
 	InteractingItem = TEXT("None");
 	GetCharacterMovement()->MaxAcceleration = 10000.f;
@@ -121,6 +122,13 @@ void ABPMCharacter::BeginPlay()
 
 	GameMode = Cast<ABPMGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	HUDWidget = Cast<UBPMHUDWidget>(GameMode->CurWidget);
+	
+	UBPMGameInstance* BPMGameInstance = Cast<UBPMGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	SetCurHP(BPMGameInstance->PlayerCurHp);
+	SetCurAmmo(BPMGameInstance->PlayerCurAmmo);
+	SetMaxAmmo(BPMGameInstance->PlayerMaxAmmo);
+	SetSpeed(BPMGameInstance->PlayerSpeed);
+	
 }
 
 void ABPMCharacter::PostInitializeComponents()
@@ -226,39 +234,52 @@ void ABPMCharacter::Tick(float DeltaTime)
 				{
 					HUDWidget->SetItemCost(FString::Printf(TEXT("")));
 					HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-					InteractingItem = TEXT("None");	
+					HUDWidget->SetVisibleSwapImage(false);
+					InteractingItem = TEXT("None");
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Potion")))
 				{					
 					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      4 G")));
 					HUDWidget->SetItemInfo(FString::Printf(TEXT("HP 25 Up")));
-					InteractingItem = TEXT("Potion");	
+					HUDWidget->SetVisibleSwapImage(true);
+					InteractingItem = TEXT("Potion");
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Clip")))
 				{					
 					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
 					HUDWidget->SetItemInfo(FString::Printf(TEXT("Max Ammo 1 Up")));
+					HUDWidget->SetVisibleSwapImage(true);
 					InteractingItem = TEXT("Clip");	
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Feather")))
 				{					
 					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
 					HUDWidget->SetItemInfo(FString::Printf(TEXT("Speed Up")));
+					HUDWidget->SetVisibleSwapImage(true);
 					InteractingItem = TEXT("Feather");	
+				}
+				else if(HitResult.GetActor()->ActorHasTag(TEXT("Scope")))
+				{					
+					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
+					HUDWidget->SetItemInfo(FString::Printf(TEXT("Range Up")));
+					HUDWidget->SetVisibleSwapImage(true);
+					InteractingItem = TEXT("Scope");	
 				}
 			}
 			else
 			{				
 				HUDWidget->SetItemCost(FString::Printf(TEXT("")));
 				HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-				InteractingItem = TEXT("None");	
+				HUDWidget->SetVisibleSwapImage(false);
+				InteractingItem = TEXT("None");
 			}
 		}
 		else
 		{
 			HUDWidget->SetItemCost(FString::Printf(TEXT("")));
 			HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-			InteractingItem = TEXT("None");					
+			HUDWidget->SetVisibleSwapImage(false);				
+			InteractingItem = TEXT("None");	
 		}
 	}
 }
@@ -536,6 +557,14 @@ void ABPMCharacter::Purchase()
 		{
 			Coin -= 6;
 			GetCharacterMovement()->MaxWalkSpeed += 500.f;
+		}
+	}
+	else if(InteractingItem.IsEqual(TEXT("Scope")))
+	{				
+		if(Coin >= 6)
+		{
+			Coin -= 6;
+			Range += 500.f;
 		}
 	}
 }

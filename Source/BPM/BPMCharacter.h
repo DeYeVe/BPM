@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BPMWeapon.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "BPMCharacter.generated.h"
 
 class UInputComponent;
@@ -181,7 +182,30 @@ private:
 	int Coin;
 
 	UPROPERTY()
+	float Range;
+
+	UPROPERTY()
 	FName InteractingItem;
+public:
+	UFUNCTION()
+	int GetCurHP() { return CurHP; };
+	UFUNCTION()
+	int GetCurAmmo() { return WeaponComponent->GetCurAmmo(); };
+	UFUNCTION()
+	int GetMaxAmmo() { return WeaponComponent->GetMaxAmmo(); };
+	UFUNCTION()
+	float GetSpeed() { return GetCharacterMovement()->MaxWalkSpeed; }
+	UFUNCTION()
+	float GetRange() { return Range; }
+	
+	UFUNCTION()
+	void SetCurHP(int HP) { CurHP = HP; };
+	UFUNCTION()
+	void SetCurAmmo(int Ammo) { WeaponComponent->CurrentAmmo = Ammo; };
+	UFUNCTION()
+	void SetMaxAmmo(int Ammo) { WeaponComponent->MaxAmmo = Ammo; };
+	UFUNCTION()
+	void SetSpeed(float Speed) { GetCharacterMovement()->MaxWalkSpeed = Speed; }
 
 public:
 	UFUNCTION()

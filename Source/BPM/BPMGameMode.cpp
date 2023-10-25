@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/AudioComponent.h"
 #include "Sound/SoundCue.h"
+#include "BPMGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 ABPMGameMode::ABPMGameMode()
 	: Super()
@@ -43,21 +45,25 @@ ABPMGameMode::ABPMGameMode()
 		}
 	}
 
-	
-
 }
 
 void ABPMGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	BPMGameInstance = Cast<UBPMGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	
 	BGMActor = GetWorld()->SpawnActor<AActor>(AActor::StaticClass());
 	TimerActor = GetWorld()->SpawnActor<ABPMTimerActor>(ABPMTimerActor::StaticClass());
-	BGMComponent->Play();
+	TimerActor->FLastBeat = BPMGameInstance->TimerLastBeat;
+	TimerActor->FTotalTime = BPMGameInstance->TimerOffset;
 	
+	BGMComponent->Play(BPMGameInstance->BGMOffset);
 }
 
 void ABPMGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	
+	
 }

@@ -1,0 +1,9 @@
+Diffuse=T_DarkKnight_Skin1_Helm_Albedo
+Normal=T_DarkKnight_Skin1_Helm_Normal
+Other[0]=T_DarkKnight_Skin1_Helm_Occlusion
+Other[1]=T_DarkKnight_Skin1_Helm_Metallness+rougness
+Other[2]=T_DarkKnight_Skin1_Collar_Albedo
+Other[3]=T_DarkKnight_Skin1_Collar_Metallness+rougness
+Other[4]=T_DarkKnight_Skin1_Collar_Normal
+Other[5]=T_DarkKnight_Skin1_Collar_Occlusion
+Other[6]=T_AtmosphericCloudNoise01

@@ -81,7 +81,7 @@ void ABPMWorm::Tick(float DeltaTime)
 			GetActorLocation(),
 			GetActorLocation() + GetActorForwardVector() * AttackRange,
 			FQuat::Identity,
-			ECollisionChannel::ECC_GameTraceChannel2,
+			ECollisionChannel::ECC_GameTraceChannel5,
 			FCollisionShape::MakeSphere(AttackRadius),
 			Params);
 

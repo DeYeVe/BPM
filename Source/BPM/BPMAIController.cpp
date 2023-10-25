@@ -8,17 +8,17 @@
 
 ABPMAIController::ABPMAIController()
 {
-	/*static ConstructorHelpers::FObjectFinder<UBehaviorTree> BT(TEXT("BlackboardData'/Game/AI/BB_Monster.BB_Monster'"));
+	static ConstructorHelpers::FObjectFinder<UBehaviorTree> BT(TEXT("BehaviorTree'/Game/AI/BT_DarkKnight.BT_DarkKnight'"));
 	if (BT.Succeeded())
 	{
 		BehaviorTree = BT.Object;
 	}
 	
-	static ConstructorHelpers::FObjectFinder<UBlackboardData> BD(TEXT("BlackboardData'/Game/AI/BB_Monster.BB_Monster'"));
+	static ConstructorHelpers::FObjectFinder<UBlackboardData> BD(TEXT("BlackboardData'/Game/AI/BB_DarkKnight.BB_DarkKnight'"));
 	if (BD.Succeeded())
 	{
 		BlackboardData = BD.Object;
-	}*/
+	}
 }
 
 void ABPMAIController::OnPossess(APawn* InPawn)
@@ -30,7 +30,6 @@ void ABPMAIController::OnPossess(APawn* InPawn)
 	{
 		if(RunBehaviorTree(BehaviorTree))
 		{
-			
 		}
 	}
 	this->Blackboard = BlackboardComp;
@@ -39,6 +38,5 @@ void ABPMAIController::OnPossess(APawn* InPawn)
 void ABPMAIController::OnUnPossess()
 {
 	Super::OnUnPossess();
-	
 	
 }

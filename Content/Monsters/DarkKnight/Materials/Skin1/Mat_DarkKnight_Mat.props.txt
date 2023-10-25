@@ -1,0 +1,199 @@
+TwoSided = true
+bDisableDepthTest = false
+bIsMasked = false
+ReferencedTextures[5] =
+{
+    ReferencedTextures[0] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Albedo.T_DarkKnight_Skin1_Collar_Albedo'
+    ReferencedTextures[1] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Metallness+rougness.T_DarkKnight_Skin1_Collar_Metallness+rougness'
+    ReferencedTextures[2] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Normal.T_DarkKnight_Skin1_Collar_Normal'
+    ReferencedTextures[3] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Occlusion.T_DarkKnight_Skin1_Collar_Occlusion'
+    ReferencedTextures[4] = Texture2D'UmodelSaved/BPM/Content/ParagonGlobal/Eyes/Textures/T_AtmosphericCloudNoise01.T_AtmosphericCloudNoise01'
+}
+Expressions[0] = {}
+CachedExpressionData =
+{
+    Parameters =
+    {
+        Entries[5] =
+        {
+            Entries[0] =
+            {
+                ParameterInfos[5] =
+                {
+                    ParameterInfos[0] = { Name=CritSphere }
+                    ParameterInfos[1] = { Name=FlashWhite }
+                    ParameterInfos[2] = { Name=FadeOut }
+                    ParameterInfos[3] = { Name=SubtractiveBorder }
+                    ParameterInfos[4] = { Name=FadeOutNoBlack }
+                }
+            }
+            Entries[1] =
+            {
+                ParameterInfos[7] =
+                {
+                    ParameterInfos[0] = { Name=AreaFlash }
+                    ParameterInfos[1] = { Name=CritLoc }
+                    ParameterInfos[2] = { Name=MasterBoost }
+                    ParameterInfos[3] = { Name=TotalFlashColor }
+                    ParameterInfos[4] = { Name=EmsBoost }
+                    ParameterInfos[5] = { Name=NoiseTextureSize }
+                    ParameterInfos[6] = { Name=CRITCOLOR }
+                }
+            }
+            Entries[2] =
+            {
+                ParameterInfos[4] =
+                {
+                    ParameterInfos[0] = { Name=Normal }
+                    ParameterInfos[1] = { Name=Albedo }
+                    ParameterInfos[2] = { Name=AO }
+                    ParameterInfos[3] = { Name=MetallicRoughness }
+                }
+            }
+            Entries[3] = { ParameterInfos[0]={} }
+            Entries[4] = { ParameterInfos[0]={} }
+        }
+        ScalarValues[5] = { 0, 0, 0, 16, 0 }
+        VectorValues[7] =
+        {
+            VectorValues[0] = { R=0.5, G=1, B=0, A=0 }
+            VectorValues[1] = { R=0, G=0, B=0, A=0 }
+            VectorValues[2] = { R=2, G=3, B=1, A=0 }
+            VectorValues[3] = { R=0, G=1, B=0, A=0 }
+            VectorValues[4] = { R=0.001, G=0.001, B=0, A=0 }
+            VectorValues[5] = { R=100, G=100, B=100, A=0 }
+            VectorValues[6] = { R=0, G=2, B=0, A=0 }
+        }
+        TextureValues[4] =
+        {
+            TextureValues[0] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Normal.T_DarkKnight_Skin1_Collar_Normal'
+            TextureValues[1] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Albedo.T_DarkKnight_Skin1_Collar_Albedo'
+            TextureValues[2] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Occlusion.T_DarkKnight_Skin1_Collar_Occlusion'
+            TextureValues[3] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Metallness+rougness.T_DarkKnight_Skin1_Collar_Metallness+rougness'
+        }
+    }
+    ReferencedTextures[8] =
+    {
+        ReferencedTextures[0] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Albedo.T_DarkKnight_Skin1_Collar_Albedo'
+        ReferencedTextures[1] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Metallness+rougness.T_DarkKnight_Skin1_Collar_Metallness+rougness'
+        ReferencedTextures[2] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Normal.T_DarkKnight_Skin1_Collar_Normal'
+        ReferencedTextures[6] = Texture2D'UmodelSaved/BPM/Content/ParagonGlobal/Eyes/Textures/T_AtmosphericCloudNoise01.T_AtmosphericCloudNoise01'
+        ReferencedTextures[7] = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Occlusion.T_DarkKnight_Skin1_Collar_Occlusion'
+    }
+}
+BlendMode = BLEND_Masked (1)
+OpacityMaskClipValue = 0.333
+CollectedTextureParameters[4] =
+{
+    CollectedTextureParameters[0] =
+    {
+        Texture = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Normal.T_DarkKnight_Skin1_Collar_Normal'
+        Name = Normal
+        Group = None
+    }
+    CollectedTextureParameters[1] =
+    {
+        Texture = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Albedo.T_DarkKnight_Skin1_Collar_Albedo'
+        Name = Albedo
+        Group = None
+    }
+    CollectedTextureParameters[2] =
+    {
+        Texture = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Occlusion.T_DarkKnight_Skin1_Collar_Occlusion'
+        Name = AO
+        Group = None
+    }
+    CollectedTextureParameters[3] =
+    {
+        Texture = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Collar_Metallness+rougness.T_DarkKnight_Skin1_Collar_Metallness+rougness'
+        Name = MetallicRoughness
+        Group = None
+    }
+}
+CollectedScalarParameters[5] =
+{
+    CollectedScalarParameters[0] = { Value=0, Name=CritSphere, Group=None }
+    CollectedScalarParameters[1] = { Value=0, Name=FlashWhite, Group=None }
+    CollectedScalarParameters[2] = { Value=0, Name=FadeOut, Group=None }
+    CollectedScalarParameters[3] = { Value=16, Name=SubtractiveBorder, Group=None }
+    CollectedScalarParameters[4] = { Value=0, Name=FadeOutNoBlack, Group=None }
+}
+CollectedVectorParameters[7] =
+{
+    CollectedVectorParameters[0] =
+    {
+        Value = { R=0.5, G=1, B=0, A=0 }
+        Name = AreaFlash
+        Group = None
+    }
+    CollectedVectorParameters[1] =
+    {
+        Value = { R=0, G=0, B=0, A=0 }
+        Name = CritLoc
+        Group = None
+    }
+    CollectedVectorParameters[2] =
+    {
+        Value = { R=2, G=3, B=1, A=0 }
+        Name = MasterBoost
+        Group = None
+    }
+    CollectedVectorParameters[3] =
+    {
+        Value = { R=0, G=1, B=0, A=0 }
+        Name = TotalFlashColor
+        Group = None
+    }
+    CollectedVectorParameters[4] =
+    {
+        Value = { R=0.001, G=0.001, B=0, A=0 }
+        Name = EmsBoost
+        Group = None
+    }
+    CollectedVectorParameters[5] =
+    {
+        Value = { R=100, G=100, B=100, A=0 }
+        Name = NoiseTextureSize
+        Group = None
+    }
+    CollectedVectorParameters[6] =
+    {
+        Value = { R=0, G=2, B=0, A=0 }
+        Name = CRITCOLOR
+        Group = None
+    }
+}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Collar_Albedo
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Collar_Metallness+rougness
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Collar_Normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Collar_Occlusion
+    }
+}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "BPMHUDWidget.generated.h"
 
@@ -37,6 +38,9 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	class UTextBlock* ItemInfo;
 	
+	UPROPERTY(meta=(BindWidget))
+	class UImage* Swap;
+	
 public:
 	UFUNCTION()
 	void SetCurAmmo(FString str) { CurAmmo->SetText(FText::FromString(str)); };
@@ -58,6 +62,9 @@ public:
 	
 	UFUNCTION()
 	void SetItemInfo(FString str) { ItemInfo->SetText(FText::FromString(str)); };
+	
+	UFUNCTION()
+	void SetVisibleSwapImage(bool b);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

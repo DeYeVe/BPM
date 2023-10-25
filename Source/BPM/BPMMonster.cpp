@@ -6,8 +6,10 @@
 #include "BPMAIController.h"
 #include "Components/CapsuleComponent.h"
 #include "BPMAnimInstance.h"
+#include "BPMGameInstance.h"
 #include "BPMItem.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Engine/LevelStreaming.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -48,6 +50,14 @@ void ABPMMonster::BeginPlay()
 	
 	//APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
 	//BPMAIController->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), PlayerPawn);
+
+	UBPMGameInstance* BPMGameInstance = Cast<UBPMGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	bool IsInClearedRoom = *(BPMGameInstance->IsRoomClear.Find(CurrentLevelName));
+	
+	if(IsInClearedRoom)
+		Destroy();
+	
 }
 
 // Called every frame
@@ -55,14 +65,13 @@ void ABPMMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CurHP <= 0)
+	if (CurHP <= 0 && MaxHP < 1000)
 	{
 		//DropItem
 		Destroy();
 		if(FMath::FRand() >= 0.5f)
 			GetWorld()->SpawnActor<ABPMItem>(CoinClass, GetActorLocation(), FRotator(0.f, 0.f, 0.f));
 	}
-
 }
 
 // Called to bind functionality to input

@@ -81,7 +81,7 @@ void UTP_WeaponComponent::Fire()
 		TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
 		FVector StartLocation = Character->GetFirstPersonCameraComponent()->GetComponentLocation();
 		FVector EndLocation = Character->GetFirstPersonCameraComponent()->GetComponentLocation()
-			+ Character->GetFirstPersonCameraComponent()->GetForwardVector() * 1200;
+			+ Character->GetFirstPersonCameraComponent()->GetForwardVector() * Character->GetRange();
 
 		bool IsHitResult = GetWorld()->LineTraceSingleByObjectType(
 			HitResult,

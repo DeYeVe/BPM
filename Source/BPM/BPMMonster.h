@@ -13,6 +13,7 @@ class BPM_API ABPMMonster : public ACharacter
 
 public:
 	UPROPERTY(VisibleAnywhere, Category=Mesh)
+	
 	USkeletalMeshComponent* MeshMonster;
 	USkeletalMeshComponent* GetMeshMonster() const { return MeshMonster; }
 	
@@ -38,7 +39,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	int Damage;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	int MaxHP;
 
 	UPROPERTY(VisibleAnywhere)
@@ -52,6 +53,9 @@ protected:
 
 	UPROPERTY()
 	bool IsAttacking;
+	
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	FName CurrentLevelName;
 
 public:
 	UFUNCTION()
@@ -60,7 +64,7 @@ public:
 	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
-	UPROPERTY()	
+	UPROPERTY(EditAnywhere)	
 	class ABPMAIController* BPMAIController;
 
 	UPROPERTY(EditDefaultsOnly, Category=Item)

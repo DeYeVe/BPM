@@ -1,0 +1,90 @@
+Parent = Material3'UmodelSaved/BPM/Content/DarkKnight/Materials/Skin1/Mat_DarkKnight_Mat.Mat_DarkKnight_Mat'
+ScalarParameterValues[1] =
+{
+    ScalarParameterValues[0] =
+    {
+        ParameterInfo = { Name=RefractionDepthBias }
+        ParameterValue = 0
+        ParameterName = None
+    }
+}
+TextureParameterValues[4] =
+{
+    TextureParameterValues[0] =
+    {
+        ParameterInfo = { Name=Albedo }
+        ParameterValue = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Lowarmor_Albedo.T_DarkKnight_Skin1_Lowarmor_Albedo'
+        ParameterName = None
+    }
+    TextureParameterValues[1] =
+    {
+        ParameterInfo = { Name=AO }
+        ParameterValue = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Lowarmor_Occlusion.T_DarkKnight_Skin1_Lowarmor_Occlusion'
+        ParameterName = None
+    }
+    TextureParameterValues[2] =
+    {
+        ParameterInfo = { Name=MetallicRoughness }
+        ParameterValue = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Lowarmor_Metallness+rougness.T_DarkKnight_Skin1_Lowarmor_Metallness+rougness'
+        ParameterName = None
+    }
+    TextureParameterValues[3] =
+    {
+        ParameterInfo = { Name=Normal }
+        ParameterValue = Texture2D'UmodelSaved/BPM/Content/DarkKnight/Textures/Skin1/T_DarkKnight_Skin1_Lowarmor_Normal.T_DarkKnight_Skin1_Lowarmor_Normal'
+        ParameterName = None
+    }
+}
+VectorParameterValues[0] = {}
+BasePropertyOverrides =
+{
+    bOverride_BlendMode = false
+    BlendMode = BLEND_Masked (1)
+    bOverride_TwoSided = false
+    TwoSided = true
+    bOverride_OpacityMaskClipValue = false
+    OpacityMaskClipValue = 0.3333
+}
+StaticParameters =
+{
+    StaticSwitchParameters[0] = {}
+    StaticComponentMaskParameters[0] = {}
+    TerrainLayerWeightParameters[0] = {}
+    MaterialLayersParameters[0] = {}
+}
+RuntimeVirtualTextureParameterValues[0] = {}
+FontParameterValues[0] = {}
+FlattenedTexture = None
+MobileBaseTexture = None
+MobileNormalTexture = None
+bUseMobileSpecular = false
+MobileSpecularPower = 16
+MobileSpecularMask = MSM_Constant (0)
+MobileMaskTexture = None
+TextureStreamingData[4] =
+{
+    TextureStreamingData[0] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Lowarmor_Albedo
+    }
+    TextureStreamingData[1] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Lowarmor_Metallness+rougness
+    }
+    TextureStreamingData[2] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Lowarmor_Normal
+    }
+    TextureStreamingData[3] =
+    {
+        SamplingScale = 1
+        UVChannelIndex = 0
+        TextureName = T_DarkKnight_Skin1_Lowarmor_Occlusion
+    }
+}

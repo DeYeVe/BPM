@@ -33,9 +33,14 @@ public:
 	UPROPERTY()
 	UUserWidget* CurWidget;
 
+	UPROPERTY()
+	class UBPMGameInstance* BPMGameInstance;
+	
+
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+
 };
 
 

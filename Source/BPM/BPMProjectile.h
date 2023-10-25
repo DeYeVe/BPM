@@ -39,10 +39,10 @@ public:
 	
 private:
 	UPROPERTY(VisibleAnywhere)
-	ABPMDemonBat* DemonBat;
+	ABPMMonster* ProjectileOwner;
 
 public:
 	UFUNCTION()
-	void SetProjectileOwner(ABPMDemonBat* TargetDemonBat);
+	void SetProjectileOwner(ABPMMonster* TargetDemonBat);
 };
 

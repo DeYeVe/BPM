@@ -47,6 +47,36 @@ UBPMAnimInstance::UBPMAnimInstance()
 		ScorpionAttackMontage = ScorpionAttackAM.Object;
 	}
 	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightAttack1AM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack1.AM_DarkKnightAttack1'"));
+	if (DarkKinightAttack1AM.Succeeded())
+	{
+		DarkKinightAttack1Monatage = DarkKinightAttack1AM.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightAttack2AM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack2.AM_DarkKnightAttack2'"));
+	if (DarkKinightAttack2AM.Succeeded())
+	{
+		DarkKinightAttack2Monatage = DarkKinightAttack2AM.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightSpawnAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightSpawn.AM_DarkKnightSpawn'"));
+	if (DarkKinightSpawnAM.Succeeded())
+	{
+		DarkKinightSpawnMonatage = DarkKinightSpawnAM.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightWalkLeftAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkLeft.AM_DarkKnightWalkLeft'"));
+	if (DarkKinightWalkLeftAM.Succeeded())
+	{
+		DarkKinightWalkLeftMonatage = DarkKinightWalkLeftAM.Object;
+	}
+	
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightWalkRightAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkRight.AM_DarkKnightWalkRight'"));
+	if (DarkKinightWalkRightAM.Succeeded())
+	{
+		DarkKinightWalkRightMonatage = DarkKinightWalkRightAM.Object;
+	}
+	
 }
 
 void UBPMAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -87,4 +117,29 @@ void UBPMAnimInstance::PlayPistolReloadEndMontage()
 void UBPMAnimInstance::PlayScorpionAttackMontage()
 {
 	Montage_Play(ScorpionAttackMontage);
+}
+
+void UBPMAnimInstance::PlayDarkKinightAttack1Monatage()
+{
+	Montage_Play(DarkKinightAttack1Monatage);
+}
+
+void UBPMAnimInstance::PlayDarkKinightAttack2Monatage()
+{
+	Montage_Play(DarkKinightAttack2Monatage);
+}
+
+void UBPMAnimInstance::PlayDarkKinightSpawnMonatage()
+{
+	Montage_Play(DarkKinightSpawnMonatage);
+}
+
+void UBPMAnimInstance::PlayDarkKinightWalkLeftMonatage()
+{
+	Montage_Play(DarkKinightWalkLeftMonatage);
+}
+
+void UBPMAnimInstance::PlayDarkKinightWalkRightMonatage()
+{
+	Montage_Play(DarkKinightWalkRightMonatage);
 }

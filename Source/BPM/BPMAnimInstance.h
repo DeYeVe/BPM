@@ -30,6 +30,12 @@ public:
 	
 	void PlayScorpionAttackMontage();
 
+	void PlayDarkKinightAttack1Monatage();
+	void PlayDarkKinightAttack2Monatage();
+	void PlayDarkKinightSpawnMonatage();
+	void PlayDarkKinightWalkLeftMonatage();
+	void PlayDarkKinightWalkRightMonatage();
+
 private:
 	enum STATE
 	{
@@ -62,5 +68,20 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Scorpion, Meta=(AllowPrivateAccess=true))
 	UAnimMontage* ScorpionAttackMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* DarkKinightAttack1Monatage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* DarkKinightAttack2Monatage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* DarkKinightSpawnMonatage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* DarkKinightWalkLeftMonatage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
+	UAnimMontage* DarkKinightWalkRightMonatage;
 	
 };
