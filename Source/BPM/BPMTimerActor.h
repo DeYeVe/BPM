@@ -28,7 +28,7 @@ public:
 	float FLastBeat;
 	
 	UPROPERTY(VisibleAnywhere)
-	float FTotalTime = 0.1f;
+	float FTotalTime;
 
 	UPROPERTY(VisibleAnywhere)
 	float FCrotchet = 60.f / 88.f; // 60 / BPM	

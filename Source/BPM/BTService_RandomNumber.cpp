@@ -22,7 +22,7 @@ void UBTService_RandomNumber::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	int x = 0;
 	x = FMath::RandRange(1, 100);
 
-	if (x <= 50)
+	if (x <= 40)
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsInt(FName(TEXT("SelectAttackNumber")), 1);
 	}

@@ -58,7 +58,7 @@ void ABPMGameMode::BeginPlay()
 	TimerActor->FLastBeat = BPMGameInstance->TimerLastBeat;
 	TimerActor->FTotalTime = BPMGameInstance->TimerOffset;
 	
-	BGMComponent->Play(BPMGameInstance->BGMOffset);
+	BGMComponent->Play(BPMGameInstance->BGMOffset + TimerActor->FTotalTime);
 }
 
 void ABPMGameMode::Tick(float DeltaSeconds)

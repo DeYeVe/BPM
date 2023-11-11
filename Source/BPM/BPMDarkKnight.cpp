@@ -164,10 +164,10 @@ void ABPMDarkKnight::Attack2()
 			ABPMProjectile* projectile = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation(), ActorSpawnParams);
 			projectile->SetProjectileOwner(this);
 			
-			ABPMProjectile* projectile2 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, 10.f, 0.f), ActorSpawnParams);
+			ABPMProjectile* projectile2 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, 15.f, 0.f), ActorSpawnParams);
 			projectile2->SetProjectileOwner(this);
 			
-			ABPMProjectile* projectile3 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, -10.f, 0.f), ActorSpawnParams);
+			ABPMProjectile* projectile3 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, -15.f, 0.f), ActorSpawnParams);
 			projectile3->SetProjectileOwner(this);
 		}
 	}
@@ -189,7 +189,8 @@ void ABPMDarkKnight::SpawnMonster()
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
-			ABPMElemental* Elemental = World->SpawnActor<ABPMElemental>(ElementalClass, GetActorLocation() + FVector(200.f, 0.f, 500.f), FRotator::ZeroRotator, ActorSpawnParams);
+			float rand = FMath::RandRange(-200.f, 200.f);
+			ABPMElemental* Elemental = World->SpawnActor<ABPMElemental>(ElementalClass, GetActorLocation() + FVector(0.f, rand, 700.f), FRotator::ZeroRotator, ActorSpawnParams);
 		}
 	}
 	

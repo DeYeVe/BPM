@@ -69,7 +69,7 @@ void ABPMMonster::Tick(float DeltaTime)
 	{
 		//DropItem
 		Destroy();
-		if(FMath::FRand() >= 0.5f)
+		if((FMath::FRand() >= 0.5f) && (CurrentLevelName!=(TEXT("Room5"))))
 			GetWorld()->SpawnActor<ABPMItem>(CoinClass, GetActorLocation(), FRotator(0.f, 0.f, 0.f));
 	}
 }
