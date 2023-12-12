@@ -24,15 +24,6 @@ class ABPMCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleAnywhere, Category=Mesh)
-	USkeletalMeshComponent* Mesh1P;
-
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FirstPersonCameraComponent;
-	
-
 public:
 	ABPMCharacter();
 
@@ -45,8 +36,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleAnywhere, Category=Mesh)
+	USkeletalMeshComponent* Mesh1P;
 
-public:
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FirstPersonCameraComponent;
+	
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float TurnRateGamepad;
@@ -148,91 +145,41 @@ public:
 	USoundBase* HitSound;
 
 private:
-	UPROPERTY()
-	bool bCanAct = true;
-
-	UPROPERTY()
-	bool bIsInCrotchet = false;
-
-	UPROPERTY()
-	bool bIsDashing = false;
-
-	UPROPERTY()
-	int DashInterval = 0;
-	
-	UPROPERTY()
-	float DashSpeed = 2000.f;
-
-	UPROPERTY()
-	float DashDuration = 0.3f;
-
-	UPROPERTY()
-	float DashTimeRemaining = 0.f;
-
-	UPROPERTY()
-	bool bISReloading = false;
-
-	UPROPERTY()
+	bool bCanAct;
+	bool bIsInCrotchet ;
+	bool bIsDashing ;
+	int DashInterval;
+	float DashSpeed ;
+	float DashDuration;
+	float DashTimeRemaining;
+	bool bISReloading;
 	int CurHP;
-	
-	UPROPERTY()
 	int MaxHP;
-	
-	UPROPERTY()
 	int Coin;
-
-	UPROPERTY()
 	float Range;
-
-	UPROPERTY()
 	FName InteractingItem;
-public:
-	UFUNCTION()
-	int GetCurHP() { return CurHP; };
-	UFUNCTION()
-	int GetCurAmmo() { return WeaponComponent->GetCurAmmo(); };
-	UFUNCTION()
-	int GetMaxAmmo() { return WeaponComponent->GetMaxAmmo(); };
-	UFUNCTION()
-	float GetSpeed() { return GetCharacterMovement()->MaxWalkSpeed; }
-	UFUNCTION()
-	float GetRange() { return Range; }
 	
-	UFUNCTION()
+public:
+	int GetCurHP() const { return CurHP; };
+	int GetCurAmmo() const { return WeaponComponent->GetCurAmmo(); };
+	int GetMaxAmmo() const { return WeaponComponent->GetMaxAmmo(); };
+	float GetSpeed() const { return GetCharacterMovement()->MaxWalkSpeed; }
+	float GetRange() const { return Range; }
+	
 	void SetCurHP(int HP) { CurHP = HP; };
-	UFUNCTION()
 	void SetCurAmmo(int Ammo) { WeaponComponent->CurrentAmmo = Ammo; };
-	UFUNCTION()
 	void SetMaxAmmo(int Ammo) { WeaponComponent->MaxAmmo = Ammo; };
-	UFUNCTION()
 	void SetSpeed(float Speed) { GetCharacterMovement()->MaxWalkSpeed = Speed; }
 
 public:
-	UFUNCTION()
 	void Fire();
-
-	UFUNCTION()
 	void DashStart();	
-
-	UFUNCTION()
 	void DashEnd();
-	
-	UFUNCTION()
 	void ReloadStart();	
-
-	UFUNCTION()
 	void ReloadEnd();
-	
-	UFUNCTION()
 	void NoAmmo();
-
-	UFUNCTION()
 	void PlayOffBeat();
-	
-	UFUNCTION()
 	void Purchase();
-	
-	UFUNCTION()
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
 };

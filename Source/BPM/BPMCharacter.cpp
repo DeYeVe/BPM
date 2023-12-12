@@ -21,13 +21,25 @@
 // ABPMCharacter
 
 ABPMCharacter::ABPMCharacter()
+	:   TurnRateGamepad(45.f),
+		bCanAct(true),
+		bIsInCrotchet(false),
+		bIsDashing(false),
+		DashInterval(0),
+		DashSpeed(2000.f),
+		DashDuration(0.3f),
+		DashTimeRemaining(0.f),
+		bISReloading(false),
+		MaxHP(100),
+		Coin(0),
+		Range(1200.f),
+		InteractingItem("None")
 {
+	GetCharacterMovement()->MaxAcceleration = 10000.f;
+	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 	GetCapsuleComponent()->SetCollisionProfileName("Player");
-
-	// set our turn rates for input
-	TurnRateGamepad = 45.f;
 
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
@@ -63,51 +75,28 @@ ABPMCharacter::ABPMCharacter()
 	
 	if(GetMesh1P()->DoesSocketExist(WeaponSocket))
 	{
-		UE_LOG(LogTemp, Log, TEXT("weapon socket"));
 		WeaponMesh->SetupAttachment(GetMesh1P(), WeaponSocket);
 	}
 	
 	WeaponComponent = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("WeaponComp"));
 
 	//sound
-	static ConstructorHelpers::FObjectFinder<USoundBase> OffBeatSoundBase(TEXT("SoundWave'/Game/Sounds/SE/OffBeat.OffBeat'"));
-	if (OffBeatSoundBase.Succeeded())
-	{
-		OffBeatSound = OffBeatSoundBase.Object;
-	}
+	auto InitSound = [this](const FString& SoundPath, USoundBase*& Sound, UAudioComponent* AudioComponent = nullptr) {
+		static ConstructorHelpers::FObjectFinder<USoundBase> SoundBase(*SoundPath);
+		if (SoundBase.Succeeded()) {
+			Sound = SoundBase.Object;
+			if (AudioComponent) {
+				AudioComponent->SetSound(Sound);
+			}
+		}
+	};
 	
-	static ConstructorHelpers::FObjectFinder<USoundBase> DashSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Dash.Dash'"));
-	if (DashSoundBase.Succeeded())
-	{
-		DashSound = DashSoundBase.Object;
-	}
-
+	InitSound(TEXT("SoundWave'/Game/Sounds/SE/OffBeat.OffBeat'"), OffBeatSound);
+	InitSound(TEXT("SoundWave'/Game/Sounds/SE/Dash.Dash'"), DashSound);
 	FootstepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepAudioComp"));
-	static ConstructorHelpers::FObjectFinder<USoundBase> FootstepSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Footstep.Footstep'"));
-	if (FootstepSoundBase.Succeeded())
-	{
-		FootstepSound = FootstepSoundBase.Object;
-		FootstepAudioComponent->SetSound(FootstepSound);
-	}
-
-	static ConstructorHelpers::FObjectFinder<USoundBase> NoAmmoSoundBase(TEXT("SoundWave'/Game/Sounds/SE/NoAmmo.NoAmmo'"));
-	if (NoAmmoSoundBase.Succeeded())
-	{
-		NoAmmoSound = NoAmmoSoundBase.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<USoundBase> HitSoundBase(TEXT("SoundWave'/Game/Sounds/SE/Hit.Hit'"));
-	if (HitSoundBase.Succeeded())
-	{
-		HitSound = HitSoundBase.Object;
-	}
-
-	//stat
-	MaxHP = 100;
-	Range = 1200.f;
-	
-	InteractingItem = TEXT("None");
-	GetCharacterMovement()->MaxAcceleration = 10000.f;
+	InitSound(TEXT("SoundWave'/Game/Sounds/SE/Footstep.Footstep'"), FootstepSound, FootstepAudioComponent);
+	InitSound(TEXT("SoundWave'/Game/Sounds/SE/NoAmmo.NoAmmo'"), NoAmmoSound);
+	InitSound(TEXT("SoundWave'/Game/Sounds/SE/Hit.Hit'"), HitSound);
 }
 
 void ABPMCharacter::BeginPlay()
@@ -140,23 +129,23 @@ void ABPMCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// condition check
+	// condition check	
+	auto HandleTimerEvent = [this](bool IsInCrotchet)
+	{
+		bIsInCrotchet = IsInCrotchet;
+		bCanAct = true;
+		if (DashInterval > 0)
+			DashInterval--;
+	};
+	
 	if (TimerActor->IsInCrotchet() && !bIsInCrotchet)
 	{
-		bIsInCrotchet = true;
-		bCanAct = true;
-		//UE_LOG(LogTemp, Log, TEXT("Change to c"));
-		if(DashInterval > 0)
-			DashInterval--;
+		HandleTimerEvent(true);
 	}
 	
 	if (TimerActor->IsInQuaver() && bIsInCrotchet)
 	{
-		bIsInCrotchet = false;
-		bCanAct = true;
-		//UE_LOG(LogTemp, Log, TEXT("Change to q"));
-		if(DashInterval > 0)
-			DashInterval--;
+		HandleTimerEvent(false);
 	}
 
 	if (bIsDashing)
@@ -226,60 +215,47 @@ void ABPMCharacter::Tick(float DeltaTime)
 			ObjectTypes,
 			Params);
 		
+		auto UpdateHUDWidget = [this](const FString& Cost, const FString& Info, const FName& Item)
+		{
+			HUDWidget->SetItemCost(Cost);
+			HUDWidget->SetItemInfo(Info);
+			HUDWidget->SetVisibleSwapImage(false);
+			InteractingItem = Item;					
+		};
+		
 		if (IsHitResult)
 		{			
 			if(HitResult.GetActor()->IsA(ABPMItem::StaticClass()))
-			{
+			{	
 				if(HitResult.GetActor()->ActorHasTag(TEXT("Coin")))
 				{
-					HUDWidget->SetItemCost(FString::Printf(TEXT("")));
-					HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-					HUDWidget->SetVisibleSwapImage(false);
-					InteractingItem = TEXT("None");
+					UpdateHUDWidget(TEXT(""), TEXT(""), TEXT("None"));
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Potion")))
 				{					
-					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      4 G")));
-					HUDWidget->SetItemInfo(FString::Printf(TEXT("HP 25 Up")));
-					HUDWidget->SetVisibleSwapImage(true);
-					InteractingItem = TEXT("Potion");
+					UpdateHUDWidget(TEXT(" F      4 G"), TEXT("HP 25 Up"), TEXT("Potion"));
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Clip")))
-				{					
-					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
-					HUDWidget->SetItemInfo(FString::Printf(TEXT("Max Ammo 1 Up")));
-					HUDWidget->SetVisibleSwapImage(true);
-					InteractingItem = TEXT("Clip");	
+				{				
+					UpdateHUDWidget(TEXT(" F      6 G"), TEXT("Max Ammo 1 Up"), TEXT("Clip"));
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Feather")))
-				{					
-					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
-					HUDWidget->SetItemInfo(FString::Printf(TEXT("Speed Up")));
-					HUDWidget->SetVisibleSwapImage(true);
-					InteractingItem = TEXT("Feather");	
+				{		
+					UpdateHUDWidget(TEXT(" F      6 G"), TEXT("Speed Up"), TEXT("Feather"));	
 				}
 				else if(HitResult.GetActor()->ActorHasTag(TEXT("Scope")))
-				{					
-					HUDWidget->SetItemCost(FString::Printf(TEXT(" F      6 G")));
-					HUDWidget->SetItemInfo(FString::Printf(TEXT("Range Up")));
-					HUDWidget->SetVisibleSwapImage(true);
-					InteractingItem = TEXT("Scope");	
+				{			
+					UpdateHUDWidget(TEXT(" F      6 G"), TEXT("Range Up"), TEXT("Scope"));		
 				}
 			}
 			else
 			{				
-				HUDWidget->SetItemCost(FString::Printf(TEXT("")));
-				HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-				HUDWidget->SetVisibleSwapImage(false);
-				InteractingItem = TEXT("None");
+				UpdateHUDWidget(TEXT(""), TEXT(""), TEXT("None"));
 			}
 		}
 		else
 		{
-			HUDWidget->SetItemCost(FString::Printf(TEXT("")));
-			HUDWidget->SetItemInfo(FString::Printf(TEXT("")));
-			HUDWidget->SetVisibleSwapImage(false);				
-			InteractingItem = TEXT("None");	
+			UpdateHUDWidget(TEXT(""), TEXT(""), TEXT("None"));
 		}
 	}
 }
@@ -405,8 +381,7 @@ void ABPMCharacter::Fire()
 		
 		return;
 	}
-	if(TimerActor)
-		UE_LOG(LogTemp, Log, TEXT("Has tiactor"));
+	
 	if (!TimerActor->IsInCrotchet() && !TimerActor->IsInQuaver())
 	{		
 		PlayOffBeat();
@@ -419,8 +394,6 @@ void ABPMCharacter::Fire()
 		NoAmmo();
 		return;
 	}
-	
-	UE_LOG(LogTemp, Log, TEXT("Fire"));
 
 	if (AnimInstance)
 	{
@@ -535,37 +508,30 @@ void ABPMCharacter::PlayOffBeat()
 
 void ABPMCharacter::Purchase()
 {
-	if(InteractingItem.IsEqual(TEXT("Potion")))
-	{	
-		if(Coin >= 4 && MaxHP - 25 >= CurHP)
+	auto TryPurchaseItem = [this](int Cost, bool Condition, const TFunction<void()>& PurchaseFunction)
+	{
+		if (Coin >= Cost && Condition)
 		{
-			Coin -= 4;
-			CurHP += 25;
+			Coin -= Cost;
+			PurchaseFunction();
 		}
+	};
+
+	if (InteractingItem.IsEqual(TEXT("Potion")))
+	{
+		TryPurchaseItem(4, MaxHP - 25 >= CurHP, [this]() { CurHP += 25; });
 	}
-	else if(InteractingItem.IsEqual(TEXT("Clip")))
-	{					
-		if(Coin >= 6)
-		{
-			Coin -= 6;
-			WeaponComponent->MaxAmmo++;
-		}
+	else if (InteractingItem.IsEqual(TEXT("Clip")))
+	{
+		TryPurchaseItem(6, true, [this]() { WeaponComponent->MaxAmmo++; });
 	}
-	else if(InteractingItem.IsEqual(TEXT("Feather")))
-	{				
-		if(Coin >= 6)
-		{
-			Coin -= 6;
-			GetCharacterMovement()->MaxWalkSpeed += 500.f;
-		}
+	else if (InteractingItem.IsEqual(TEXT("Feather")))
+	{
+		TryPurchaseItem(6, true, [this]() { GetCharacterMovement()->MaxWalkSpeed += 500.f; });
 	}
-	else if(InteractingItem.IsEqual(TEXT("Scope")))
-	{				
-		if(Coin >= 6)
-		{
-			Coin -= 6;
-			Range += 500.f;
-		}
+	else if (InteractingItem.IsEqual(TEXT("Scope")))
+	{
+		TryPurchaseItem(6, true, [this]() { Range += 500.f; });
 	}
 }
 

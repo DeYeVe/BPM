@@ -5,6 +5,7 @@
 #include "BPMCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/DamageEvents.h"
 
 ABPMProjectile::ABPMProjectile() 
 {
@@ -41,7 +42,6 @@ void ABPMProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		{
 			FDamageEvent DamageEvent;
 			Cast<ABPMCharacter>(OtherActor)->TakeDamage(25.f, DamageEvent, ProjectileOwner->GetController(), ProjectileOwner);
-			UE_LOG(LogTemp, Log, TEXT("Demon Bat Fire Hit Player"));			
 		}
 		Destroy();
 	}

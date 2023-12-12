@@ -19,7 +19,7 @@ void ABPMDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Rotaion = GetActorRotation();
+	Rotation = GetActorRotation();
 
 	UBPMGameInstance* BPMGameInstance = Cast<UBPMGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -29,11 +29,11 @@ void ABPMDoor::BeginPlay()
 	{
 		if(bIsLeftDoor)
 		{
-			SetActorRotation(Rotaion + FRotator(0.f, -70.f, 0.f));
+			SetActorRotation(Rotation + FRotator(0.f, -70.f, 0.f));
 		}
 		else
 		{			
-			SetActorRotation(Rotaion + FRotator(0.f, 70.f, 0.f));			
+			SetActorRotation(Rotation + FRotator(0.f, 70.f, 0.f));			
 		}
 	}	
 }
@@ -56,11 +56,11 @@ void ABPMDoor::Tick(float DeltaTime)
 
 		if(bIsLeftDoor)
 		{
-			SetActorRotation(Rotaion + FRotator(0.f, - OpeningTime * 35.f, 0.f));
+			SetActorRotation(Rotation + FRotator(0.f, - OpeningTime * 35.f, 0.f));
 		}
 		else
 		{			
-			SetActorRotation(Rotaion + FRotator(0.f, OpeningTime * 35.f, 0.f));			
+			SetActorRotation(Rotation + FRotator(0.f, OpeningTime * 35.f, 0.f));			
 		}
 	}
 	

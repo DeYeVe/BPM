@@ -16,7 +16,6 @@ ABPMWeapon::ABPMWeapon()
 	if(SM.Succeeded())
 	{
 		WeaponMesh->SetSkeletalMesh(SM.Object);
-		UE_LOG(LogTemp, Log, TEXT("weapon sm set"));
 	}
 
 	WeaponComponent = CreateDefaultSubobject<UTP_WeaponComponent>(TEXT("WeaponComp"));
@@ -40,7 +39,6 @@ void ABPMWeapon::Tick(float DeltaTime)
 
 void ABPMWeapon::Fire()
 {
-	UE_LOG(LogTemp, Log, TEXT("Fire From Pistol"));
 	if(AnimInstance)
 	{
 		AnimInstance->PlayPistolFireMontage();

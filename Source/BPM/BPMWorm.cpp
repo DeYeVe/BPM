@@ -99,8 +99,6 @@ void ABPMWorm::Tick(float DeltaTime)
 	
 		if(bResult && IsValid(HitResult.GetActor()))
 		{
-			UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.GetActor()->GetName());
-
 			FDamageEvent DamageEvent;
 			HitResult.GetActor()->TakeDamage(GetDamage(), DamageEvent, GetController(), this);
 		}			

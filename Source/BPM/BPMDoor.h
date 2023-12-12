@@ -26,18 +26,10 @@ public:
 private:	
 	UPROPERTY(EditAnywhere)
 	bool bIsLeftDoor;
-
-	UPROPERTY()
 	bool bIsInClearedRoom;
-	
-	UPROPERTY()
 	bool bIsOpening;
-
-	UPROPERTY()
 	float OpeningTime;
-
-	UPROPERTY()
-	FRotator Rotaion;
+	FRotator Rotation;
 	
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	FName CurrentLevelName;	

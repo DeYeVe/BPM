@@ -26,8 +26,7 @@ void ABPMTimerActor::Tick(float DeltaTime)
 
 	if(FTotalTime - FLastBeat >= FCrotchet)
 	{
-		FLastBeat += FCrotchet;		
-		UE_LOG(LogTemp, Log, TEXT("%f"), FLastBeat);
+		FLastBeat += FCrotchet;
 	}
 }
 

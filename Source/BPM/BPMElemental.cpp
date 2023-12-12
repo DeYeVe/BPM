@@ -6,6 +6,7 @@
 #include "BPMCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 ABPMElemental::ABPMElemental()
@@ -94,8 +95,6 @@ void ABPMElemental::Tick(float DeltaTime)
 	
 		if(bResult && IsValid(HitResult.GetActor()))
 		{
-			UE_LOG(LogTemp, Log, TEXT("Hit Actor : %s"), *HitResult.GetActor()->GetName());
-
 			FDamageEvent DamageEvent;
 			HitResult.GetActor()->TakeDamage(GetDamage(), DamageEvent, GetController(), this);
 		}

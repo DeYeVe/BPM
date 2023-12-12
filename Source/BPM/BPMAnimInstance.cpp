@@ -5,78 +5,28 @@
 
 UBPMAnimInstance::UBPMAnimInstance()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PlayerFireAM(TEXT("AnimMontage'/Game/Player/AM_PlayerFire.AM_PlayerFire'"));
-	if (PlayerFireAM.Succeeded())
+	auto InitMontage = [this](const FString& MontagePath, UAnimMontage*& Montage)
 	{
-		PlayerFireMontage = PlayerFireAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PistolFireAM(TEXT("AnimMontage'/Game/Weapons/AM_PistolFire.AM_PistolFire'"));
-	if (PistolFireAM.Succeeded())
-	{
-		PistolFireMontage = PistolFireAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PlayerReloadStartAM(TEXT("AnimMontage'/Game/Player/AM_PlayerReloadStart.AM_PlayerReloadStart'"));
-	if (PlayerReloadStartAM.Succeeded())
-	{
-		PlayerReloadStartMontage = PlayerReloadStartAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PistolReloadStartAM(TEXT("AnimMontage'/Game/Weapons/AM_PistolReloadStart.AM_PistolReloadStart'"));
-	if (PistolReloadStartAM.Succeeded())
-	{
-		PistolReloadStartMontage = PistolReloadStartAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PlayerReloadEndAM(TEXT("AnimMontage'/Game/Player/AM_PlayerReloadEnd.AM_PlayerReloadEnd'"));
-	if (PlayerReloadEndAM.Succeeded())
-	{
-		PlayerReloadEndMontage = PlayerReloadEndAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> PistolReloadEndAM(TEXT("AnimMontage'/Game/Weapons/AM_PistolReloadEnd.AM_PistolReloadEnd'"));
-	if (PistolReloadEndAM.Succeeded())
-	{
-		PistolReloadEndMontage = PistolReloadEndAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ScorpionAttackAM(TEXT("AnimMontage'/Game/Monsters/Scorpion/AM_ScorpionAttack.AM_ScorpionAttack'"));
-	if (ScorpionAttackAM.Succeeded())
-	{
-		ScorpionAttackMontage = ScorpionAttackAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightAttack1AM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack1.AM_DarkKnightAttack1'"));
-	if (DarkKinightAttack1AM.Succeeded())
-	{
-		DarkKinightAttack1Monatage = DarkKinightAttack1AM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightAttack2AM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack2.AM_DarkKnightAttack2'"));
-	if (DarkKinightAttack2AM.Succeeded())
-	{
-		DarkKinightAttack2Monatage = DarkKinightAttack2AM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightSpawnAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightSpawn.AM_DarkKnightSpawn'"));
-	if (DarkKinightSpawnAM.Succeeded())
-	{
-		DarkKinightSpawnMonatage = DarkKinightSpawnAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightWalkLeftAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkLeft.AM_DarkKnightWalkLeft'"));
-	if (DarkKinightWalkLeftAM.Succeeded())
-	{
-		DarkKinightWalkLeftMonatage = DarkKinightWalkLeftAM.Object;
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> DarkKinightWalkRightAM(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkRight.AM_DarkKnightWalkRight'"));
-	if (DarkKinightWalkRightAM.Succeeded())
-	{
-		DarkKinightWalkRightMonatage = DarkKinightWalkRightAM.Object;
-	}
-	
+		static ConstructorHelpers::FObjectFinder<UAnimMontage> MontageFinder(*MontagePath);
+		if (MontageFinder.Succeeded())
+		{
+			Montage = MontageFinder.Object;
+		}
+	};
+
+	InitMontage(TEXT("AnimMontage'/Game/Player/AM_PlayerFire.AM_PlayerFire'"), PlayerFireMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Weapons/AM_PistolFire.AM_PistolFire'"), PistolFireMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Player/AM_PlayerReloadStart.AM_PlayerReloadStart'"), PlayerReloadStartMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Weapons/AM_PistolReloadStart.AM_PistolReloadStart'"), PistolReloadStartMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Player/AM_PlayerReloadEnd.AM_PlayerReloadEnd'"), PlayerReloadEndMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Weapons/AM_PistolReloadEnd.AM_PistolReloadEnd'"), PistolReloadEndMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/Scorpion/AM_ScorpionAttack.AM_ScorpionAttack'"), ScorpionAttackMontage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack1.AM_DarkKnightAttack1'"), DarkKinightAttack1Monatage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightAttack2.AM_DarkKnightAttack2'"), DarkKinightAttack2Monatage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightSpawn.AM_DarkKnightSpawn'"), DarkKinightSpawnMonatage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkLeft.AM_DarkKnightWalkLeft'"), DarkKinightWalkLeftMonatage);
+	InitMontage(TEXT("AnimMontage'/Game/Monsters/DarkKnight/AM_DarkKnightWalkRight.AM_DarkKnightWalkRight'"), DarkKinightWalkRightMonatage);
+
 }
 
 void UBPMAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

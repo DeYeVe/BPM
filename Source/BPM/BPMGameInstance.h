@@ -17,31 +17,14 @@ class BPM_API UBPMGameInstance : public UGameInstance
 	virtual void Init() override;
 
 public:
-	UPROPERTY()
 	TMap<FName, bool> IsRoomClear;
-
-	UPROPERTY()
 	int PlayerCurHp;
-
-	UPROPERTY()
 	int PlayerCurAmmo;
-
-	UPROPERTY()
 	int PlayerMaxAmmo;
-	
-	UPROPERTY()
 	float PlayerSpeed;
-	
-	UPROPERTY()
 	float TimerOffset;
-	
-	UPROPERTY()
 	float TimerLastBeat;
-	
-	UPROPERTY()
 	float BGMOffset;
-
-	UPROPERTY()
 	FName CurrentLevelName;
 	
 };

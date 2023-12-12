@@ -36,22 +36,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	UPROPERTY(VisibleAnywhere)
 	int Damage;
-
-	UPROPERTY(EditAnywhere)
 	int MaxHP;
-
-	UPROPERTY(VisibleAnywhere)
 	int CurHP;
-
-	UPROPERTY(VisibleAnywhere)
 	float MoveSpeed;
-
-	UPROPERTY()
 	float AttackCoolDown;
-
-	UPROPERTY()
 	bool IsAttacking;
 	
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))

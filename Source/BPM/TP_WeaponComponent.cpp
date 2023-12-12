@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "BPMMonster.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -70,7 +71,6 @@ void UTP_WeaponComponent::Fire()
 	}
 
 	CurrentAmmo--;
-	UE_LOG(LogTemp, Log, TEXT("%d"), CurrentAmmo);
 	
 	// scan hit using trace
 	{
@@ -100,7 +100,6 @@ void UTP_WeaponComponent::Fire()
 
 		if (IsHitResult)
 		{
-			UE_LOG(LogTemp, Log, TEXT("Hit"));
 			
 			if(HitResult.GetActor()->IsA(ABPMMonster::StaticClass()))
 			{

@@ -23,7 +23,6 @@ ABPMDarkKnight::ABPMDarkKnight()
 	}	
 	MeshMonster->SetRelativeLocation(FVector(20.0f, 0.0f, -50.f));
 	MeshMonster->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
-
 	
 }
 
@@ -43,8 +42,7 @@ void ABPMDarkKnight::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	if (IsDead)
-		return;
-	
+		return;	
 
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
 	FVector PlayerLocation = PlayerPawn->GetActorLocation();
@@ -161,14 +159,18 @@ void ABPMDarkKnight::Attack2()
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
-			ABPMProjectile* projectile = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation(), ActorSpawnParams);
-			projectile->SetProjectileOwner(this);
-			
-			ABPMProjectile* projectile2 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, 15.f, 0.f), ActorSpawnParams);
-			projectile2->SetProjectileOwner(this);
-			
-			ABPMProjectile* projectile3 = World->SpawnActor<ABPMProjectile>(ProjectileClass, GetActorLocation() + FVector(0.f, 0.f, 100.f), NormalDirection.Rotation() - FRotator(0.f, -15.f, 0.f), ActorSpawnParams);
-			projectile3->SetProjectileOwner(this);
+			auto SpawnProjectile = [this, &World, &ActorSpawnParams](const FVector& SpawnLocation, const FRotator& SpawnRotation)
+			{
+				ABPMProjectile* projectile = World->SpawnActor<ABPMProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				projectile->SetProjectileOwner(this);
+			};
+
+			FVector ProjectileLocation = GetActorLocation() + FVector(0.f, 0.f, 100.f);
+			FRotator ProjectileRotation = NormalDirection.Rotation();
+
+			SpawnProjectile(ProjectileLocation, ProjectileRotation);
+			SpawnProjectile(ProjectileLocation, ProjectileRotation - FRotator(0.f, 15.f, 0.f));
+			SpawnProjectile(ProjectileLocation, ProjectileRotation - FRotator(0.f, -15.f, 0.f));
 		}
 	}
 	
@@ -180,7 +182,6 @@ void ABPMDarkKnight::Attack2()
 
 void ABPMDarkKnight::SpawnMonster()
 {
-	// 기본애니메이션 변경, 인터벌 줘서 세번 연속 생성, 다시 기본애니메이션 변경
 	if (ElementalClass != nullptr)
 	{
 		UWorld* const World = GetWorld();

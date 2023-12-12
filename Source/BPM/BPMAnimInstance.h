@@ -6,9 +6,10 @@
 #include "Animation/AnimInstance.h"
 #include "BPMAnimInstance.generated.h"
 
-/**
- * 
- */
+#define DECLARE_ANIM_MONTAGE(CategoryPrefix, Name) \
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=CategoryPrefix, Meta=(AllowPrivateAccess=true)) \
+	UAnimMontage* Name;
+
 UCLASS()
 class BPM_API UBPMAnimInstance : public UAnimInstance
 {
@@ -21,15 +22,11 @@ public:
 
 	void PlayPlayerFireMontage();
 	void PlayPistolFireMontage();
-
 	void PlayPlayerReloadStartMontage();
-	void PlayPistolReloadStartMontage();
-	
+	void PlayPistolReloadStartMontage();	
 	void PlayPlayerReloadEndMontage();
-	void PlayPistolReloadEndMontage();
-	
+	void PlayPistolReloadEndMontage();	
 	void PlayScorpionAttackMontage();
-
 	void PlayDarkKinightAttack1Monatage();
 	void PlayDarkKinightAttack2Monatage();
 	void PlayDarkKinightSpawnMonatage();
@@ -47,41 +44,17 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
 	bool CanAct;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PlayerFireMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PistolFireMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PlayerReloadStartMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PistolReloadStartMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Player, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PlayerReloadEndMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Pistol, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* PistolReloadEndMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Scorpion, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* ScorpionAttackMontage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* DarkKinightAttack1Monatage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* DarkKinightAttack2Monatage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* DarkKinightSpawnMonatage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* DarkKinightWalkLeftMonatage;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=DarkKnight, Meta=(AllowPrivateAccess=true))
-	UAnimMontage* DarkKinightWalkRightMonatage;
-	
+	DECLARE_ANIM_MONTAGE(Player, PlayerFireMontage);
+	DECLARE_ANIM_MONTAGE(Pistol, PistolFireMontage);
+	DECLARE_ANIM_MONTAGE(Player, PlayerReloadStartMontage);
+	DECLARE_ANIM_MONTAGE(Pistol, PistolReloadStartMontage);
+	DECLARE_ANIM_MONTAGE(Player, PlayerReloadEndMontage);
+	DECLARE_ANIM_MONTAGE(Pistol, PistolReloadEndMontage);
+	DECLARE_ANIM_MONTAGE(Scorpion, ScorpionAttackMontage);
+	DECLARE_ANIM_MONTAGE(DarkKnight, DarkKinightAttack1Monatage);
+	DECLARE_ANIM_MONTAGE(DarkKnight, DarkKinightAttack2Monatage);
+	DECLARE_ANIM_MONTAGE(DarkKnight, DarkKinightSpawnMonatage);
+	DECLARE_ANIM_MONTAGE(DarkKnight, DarkKinightWalkLeftMonatage);
+	DECLARE_ANIM_MONTAGE(DarkKnight, DarkKinightWalkRightMonatage);
 };

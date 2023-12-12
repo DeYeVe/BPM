@@ -28,10 +28,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	UPROPERTY()
 	float MoveIntervalTime;
-
-	UPROPERTY()
 	float RandomFloat;
 
 public:

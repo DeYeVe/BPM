@@ -53,7 +53,6 @@ public:
 	bool IsWalking;
 	bool IsWalkingLeft;
 	bool IsWalkingRight;
-
 	float WalkTime;
 
 	UPROPERTY(EditAnywhere)
