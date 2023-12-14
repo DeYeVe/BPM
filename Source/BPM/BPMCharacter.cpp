@@ -82,7 +82,7 @@ ABPMCharacter::ABPMCharacter()
 
 	//sound
 	auto InitSound = [this](const FString& SoundPath, USoundBase*& Sound, UAudioComponent* AudioComponent = nullptr) {
-		static ConstructorHelpers::FObjectFinder<USoundBase> SoundBase(*SoundPath);
+		ConstructorHelpers::FObjectFinder<USoundBase> SoundBase(*SoundPath);
 		if (SoundBase.Succeeded()) {
 			Sound = SoundBase.Object;
 			if (AudioComponent) {

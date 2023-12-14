@@ -7,7 +7,7 @@ UBPMAnimInstance::UBPMAnimInstance()
 {
 	auto InitMontage = [this](const FString& MontagePath, UAnimMontage*& Montage)
 	{
-		static ConstructorHelpers::FObjectFinder<UAnimMontage> MontageFinder(*MontagePath);
+		ConstructorHelpers::FObjectFinder<UAnimMontage> MontageFinder(*MontagePath);
 		if (MontageFinder.Succeeded())
 		{
 			Montage = MontageFinder.Object;
